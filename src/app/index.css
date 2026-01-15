@@ -1,3 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  /* min width 기준 breakpoints */
+  --breakpoint-*: initial;
+  --breakpoint-xs: 0px;
+  --breakpoint-sm: 429px;
+  --breakpoint-md: 639px;
+  --breakpoint-lg: 1023px;
+
+  --text-xxs: 0.6rem;
+  --text-xs: 0.9rem;
+  --text-s: 1.2rem;
+  --text-sm: 1.3rem;
+  --text-md: 1.6rem;
+  --text-lg: 1.8rem;
+  --text-xl: 2rem;
+  --text-xxl: 2.8rem;
+
+  --color-theme: var(--theme);
+  --color-error: var(--error);
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -11,58 +34,25 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --theme: rgb(255, 207, 48);
+  --error: rgb(255, 31, 31);
+  --skeleton: #c8c9cc;
+  --skeleton-rgb: 200, 201, 204;
+  --text: black;
+  --background: rgb(250, 252, 252);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+
+::-webkit-scrollbar {
+  display: none;
 }
 
-body {
+body,
+html {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
