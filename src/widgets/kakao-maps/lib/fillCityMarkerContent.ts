@@ -9,7 +9,7 @@ export function fillCityMarkerContent(city: City) {
         <div class="flex flex-col items-center justify-between px-1 w-full h-fit gap-0.5 truncate">
             <div class="flex flex-row items-center justify-between w-full gap-1 text-xs">
                 <h3>${city.sido}</h3>
-                <p class="text-xxs text-secondary">${"25°"}C</p>
+                <p class="text-xxs text-orange-500">${"25°"}C</p>
             </div>
             <span class="text-xxs truncate w-full text-secondary">${
               city.sigungu ?? ""

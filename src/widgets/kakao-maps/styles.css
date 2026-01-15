@@ -1,12 +1,12 @@
 @reference "@/app/styles/index.css";
 
 .city-marker {
-  @apply relative bottom-2 left-0 z-10 bg-white opacity-90 rounded-sm p-1 py-2 flex flex-col items-center justify-end gap-1 text-xs min-w-18 max-w-30 h-fit border border-background transition-all duration-200;
+  @apply relative bottom-2 left-0 z-10 bg-white opacity-90 rounded-sm p-1 py-2 flex flex-col items-center justify-end gap-1 text-xs min-w-18 max-w-30 h-fit border border-theme transition-all duration-200;
 }
 
 .city-marker::before {
   content: "";
-  @apply absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-transparent border-t-background border-8;
+  @apply absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-transparent border-t-theme border-8;
 }
 
 .city-marker::after {
@@ -16,5 +16,5 @@
 
 /* 현 위치 dot 스타일 */
 .location-dot {
-    @apply absolute w-3.5 h-3.5 bg-orange-500 rounded-full filter drop-shadow-md border border-white outline outline-background animate-[ping_1.6s_ease-in-out_forwards_reverse];
+    @apply absolute w-4 h-4 bg-orange-500 rounded-full border-2 border-theme filter drop-shadow-md animate-[ping_1.6s_ease-in-out_forwards_reverse];
 }

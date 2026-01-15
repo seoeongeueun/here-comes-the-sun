@@ -4,7 +4,7 @@ import { Dashboard } from "@/widgets/dashboard";
 export function MainPage() {
   return (
     <div className="h-full w-full flex flex-row">
-      <section className="p-10 w-full h-full">
+      <section className="p-10 w-full h-full ">
         <KakaoMap />
       </section>
       <section className="w-full h-full">

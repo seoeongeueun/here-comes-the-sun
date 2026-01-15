@@ -114,7 +114,7 @@ export function KakaoMap() {
     <div
       id="map"
       ref={mapRef}
-      className="w-full h-full rounded-xl border-4 border-white"
+      className="w-full h-full rounded-xl border-4 border-white shadow-xl"
     ></div>
   );
 }
