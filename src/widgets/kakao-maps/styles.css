@@ -1,7 +1,7 @@
 @reference "@/app/index.css";
 
 .city-marker {
-  @apply relative bottom-1 left-0 z-10 bg-white opacity-90 rounded-sm shadow-md p-0.5 flex flex-col items-center justify-center gap-1 text-xs min-w-12 min-h-12 aspect-square border border-white transition-all duration-200;
+  @apply relative bottom-2 left-0 z-10 bg-white opacity-90 rounded-sm shadow-md p-0.5 flex flex-col items-center justify-end gap-1 text-xs w-20 h-fit border border-white transition-all duration-200;
 }
 
 .city-marker::before {
