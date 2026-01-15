@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./fonts.css";
 
 @theme {
   /* min width 기준 breakpoints */
@@ -8,23 +9,27 @@
   --breakpoint-md: 639px;
   --breakpoint-lg: 1023px;
 
-  --text-xxs: 0.6rem;
+  --text-xxs: 0.7rem;
   --text-xs: 0.8rem;
-  --text-s: 1.2rem;
-  --text-sm: 1.3rem;
-  --text-md: 1.6rem;
+  --text-s: 0.9rem;
+  --text-sm: 1.2rem;
+  --text-md: 1.4rem;
   --text-lg: 1.8rem;
   --text-xl: 2rem;
   --text-xxl: 2.8rem;
 
   --color-theme: var(--theme);
   --color-error: var(--error);
+  --color-secondary: var(--secondary);
+  --color-background: var(--background);
+
+  --font-school: 'SchoolSafetyNotification', sans-serif;
 }
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'SchoolSafetyNotification', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 500;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -32,6 +37,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   --theme: rgb(255, 207, 48);
+  --secondary: rgb(85, 85, 85);
   --error: rgb(255, 31, 31);
   --skeleton: #c8c9cc;
   --skeleton-rgb: 200, 201, 204;

@@ -1,9 +1,9 @@
 export function Header() {
   return (
-    <header className="text-3xl text-theme ml-auto font-bold flex flex-row items-center gap-1">
+    <header className="text-lg text-white ml-auto font-bold flex flex-row items-center gap-1">
       Here Comes the Sun
-      <span aria-hidden className="text-sm">
-        ☀️
+      <span aria-hidden className="text-lg mb-1">
+        🌤️
       </span>
     </header>
   );
