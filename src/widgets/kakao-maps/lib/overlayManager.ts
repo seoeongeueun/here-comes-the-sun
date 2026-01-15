@@ -10,6 +10,7 @@ interface OverlayItem {
 export class OverlayManager {
   private overlays: Map<string, OverlayItem> = new Map();
   private activeOverlay: OverlayItem | null = null;
+  private currentLocationDot: kakao.maps.CustomOverlay | null = null;
   private map: kakao.maps.Map;
 
   constructor(map: kakao.maps.Map) {
@@ -109,5 +110,34 @@ export class OverlayManager {
   clearAll(): void {
     this.hideAll();
     this.overlays.clear();
+  }
+
+  setCurrentLocationDot(lat: number, lng: number) {
+    const position = new kakao.maps.LatLng(lat, lng);
+
+    // 기존 점 제거
+    if (this.currentLocationDot) {
+      this.currentLocationDot.setMap(null);
+      this.currentLocationDot = null;
+    }
+
+    const dot = document.createElement("div");
+    dot.className = "location-dot";
+
+    const overlay = new kakao.maps.CustomOverlay({
+      position,
+      content: dot,
+      yAnchor: 0.5,
+      zIndex: 999,
+    });
+
+    overlay.setMap(this.map);
+    this.currentLocationDot = overlay;
+  }
+
+  clearCurrentLocationDot() {
+    if (!this.currentLocationDot) return;
+    this.currentLocationDot.setMap(null);
+    this.currentLocationDot = null;
   }
 }

@@ -36,6 +36,21 @@ export function KakaoMap() {
       // 장소 분석을 위한 geocoder 생성
       const geocoder = new kakao.maps.services.Geocoder();
 
+      //현 위치 표시
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            manager.setCurrentLocationDot(lat, lng);
+          },
+          (error) => {
+            console.log("현재 위치 가져오기 실패:", error);
+          }
+        );
+      }
+
       // 지도 클릭 이벤트 설정
       kakao.maps.event.addListener(
         map,
