@@ -3,14 +3,20 @@ import { loadKakaoMaps, DEFAULT_CENTER, DEFAULT_LEVEL } from "@/shared/lib";
 import { MAJOR_CITIES } from "@/entities/city";
 import { OverlayManager } from "../lib/overlayManager";
 import "../styles.css";
-import { useSelectPlaceStore } from "@/features/select-place/model/store";
+import { useSelectPlaceStore } from "@/features/select-place";
+import { useCurrentLocationStore } from "@/features/current-location";
 import type { KakaoRegionAddress } from "../lib/types";
 
 export function KakaoMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const managerRef = useRef<OverlayManager | null>(null);
+  const geocoderRef = useRef<kakao.maps.services.Geocoder | null>(null);
   const selectedPlace = useSelectPlaceStore((s) => s.selectedPlace);
   const selectPlace = useSelectPlaceStore((s) => s.selectPlace);
+  const setCurrentLocation = useCurrentLocationStore(
+    (s) => s.setCurrentLocation
+  );
+  const currentLocation = useCurrentLocationStore((s) => s.currentLocation);
 
   useEffect(() => {
     loadKakaoMaps().then(() => {
@@ -33,8 +39,8 @@ export function KakaoMap() {
         manager.createOverlay(city);
       });
 
-      // 장소 분석을 위한 geocoder 생성
-      const geocoder = new kakao.maps.services.Geocoder();
+      // 장소 분석을 위한 geocoder
+      geocoderRef.current = new kakao.maps.services.Geocoder();
 
       //현 위치 표시
       if (navigator.geolocation) {
@@ -44,6 +50,7 @@ export function KakaoMap() {
             const lng = position.coords.longitude;
 
             manager.setCurrentLocationDot(lat, lng);
+            setCurrentLocation({ lat, lng, sido: "" });
           },
           (error) => {
             console.log("현재 위치 가져오기 실패:", error);
@@ -60,7 +67,7 @@ export function KakaoMap() {
           const lng = latlng.getLng();
           const lat = latlng.getLat();
 
-          geocoder.coord2Address(lng, lat, (result, status) => {
+          geocoderRef.current!.coord2Address(lng, lat, (result, status) => {
             // 주소 정보가 없으면 굳이 처리하지 않는다
             if (status !== kakao.maps.services.Status.OK || !result?.length) {
               selectPlace({ lat, lng, sido: "" });
@@ -85,6 +92,29 @@ export function KakaoMap() {
       managerRef.current?.clearAll();
     };
   }, [selectPlace]);
+
+  useEffect(() => {
+    if (!managerRef.current || !currentLocation || !geocoderRef.current) return;
+
+    //currentlocation 좌표를 검색해서 시군구 정보 가져오기
+    geocoderRef.current.coord2Address(
+      currentLocation.lng,
+      currentLocation.lat,
+      (result, status) => {
+        if (status !== kakao.maps.services.Status.OK || !result?.length) {
+          return;
+        }
+        const address = result[0].address as KakaoRegionAddress;
+        setCurrentLocation({
+          lat: currentLocation.lat,
+          lng: currentLocation.lng,
+          sido: address.region_1depth_name,
+          sigungu: address.region_2depth_name,
+          dong: address.region_3depth_name,
+        });
+      }
+    );
+  }, [currentLocation, setCurrentLocation]);
 
   // 장소가 선택되면 디폴트 도시 마커는 전체 숨김 처리
   useEffect(() => {
