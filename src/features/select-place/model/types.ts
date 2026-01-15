@@ -1,7 +1,7 @@
-export type SelectedPlace = {
-  lat: number;
-  lng: number;
-  sido: string;
-  sigungu?: string;
-  dong?: string;
+import type { Location } from "@/entities/location";
+
+export type SelectPlaceState = {
+  selectedPlace: Location | null;
+  selectPlace: (place: Location) => void;
+  clearPlace: () => void;
 };
