@@ -16,5 +16,5 @@
 
 /* 현 위치 dot 스타일 */
 .location-dot {
-    @apply absolute w-3 h-3 bg-orange-500 rounded-full filter drop-shadow-md animate-[ping_2s_ease-in-out_backwards] delay-500;
+    @apply absolute w-3.5 h-3.5 bg-orange-500 rounded-full filter drop-shadow-md border border-white outline outline-background animate-[ping_1.6s_ease-in-out_forwards_reverse];
 }
