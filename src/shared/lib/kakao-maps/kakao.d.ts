@@ -1,7 +1,42 @@
 export {};
 
 declare global {
+  namespace kakao {
+    namespace maps {
+      function load(callback: () => void): void;
+
+      class LatLng {
+        constructor(lat: number, lng: number);
+      }
+
+      class Map {
+        constructor(
+          container: HTMLElement,
+          options: { center: LatLng; level?: number }
+        );
+      }
+
+      class Marker {
+        constructor(options: { map: Map; position: LatLng; title?: string });
+      }
+
+      class CustomOverlay {
+        constructor(options: {
+          position: LatLng;
+          content: string | HTMLElement;
+          yAnchor?: number;
+          zIndex?: number;
+        });
+        setMap(map: Map | null): void;
+        getContent(): string | HTMLElement;
+        setZIndex(zIndex: number): void;
+      }
+    }
+  }
+}
+
+declare global {
   interface Window {
-    kakao: any; // 임시 타입이고 https://github.com/JaeSeoKim/kakao.maps.d.ts 에서 제공하는 타입 고려 중
+    kakao: typeof kakao;
   }
 }

@@ -1,0 +1,10 @@
+@reference "@/app/index.css";
+
+.city-marker {
+  @apply relative bottom-1 left-0 z-10 bg-white opacity-90 rounded-sm shadow-md p-0.5 flex flex-col items-center justify-center gap-1 text-xs min-w-12 min-h-12 aspect-square border border-white transition-all duration-200;
+}
+
+.city-marker::before {
+  content: "";
+  @apply absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-transparent border-t-white border-6;
+}

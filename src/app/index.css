@@ -9,7 +9,7 @@
   --breakpoint-lg: 1023px;
 
   --text-xxs: 0.6rem;
-  --text-xs: 0.9rem;
+  --text-xs: 0.8rem;
   --text-s: 1.2rem;
   --text-sm: 1.3rem;
   --text-md: 1.6rem;
@@ -25,10 +25,6 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -54,5 +50,6 @@ html, #root {
   width: 100%;
   height: 100%;
   background-color: var(--background);
+  color: var(--text);
 }
 
