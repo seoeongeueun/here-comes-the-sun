@@ -8,7 +8,7 @@ export function loadKakaoMaps() {
     const script = document.createElement("script");
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${
       import.meta.env.VITE_KAKAO_MAP_KEY
-    }&autoload=false`;
+    }&autoload=false&libraries=services`;
     script.async = true;
 
     script.onload = () => {

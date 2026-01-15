@@ -3,10 +3,15 @@ import { loadKakaoMaps, DEFAULT_CENTER, DEFAULT_LEVEL } from "@/shared/lib";
 import { MAJOR_CITIES } from "@/entities/city";
 import { OverlayManager } from "../lib/overlayManager";
 import "../styles.css";
+import { useSelectPlaceStore } from "@/features/select-place/model/store";
+import type { KakaoRegionAddress } from "../lib/types";
+import { simplifySido } from "@/shared/lib";
 
 export function KakaoMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const managerRef = useRef<OverlayManager | null>(null);
+  const selectedPlace = useSelectPlaceStore((s) => s.selectedPlace);
+  const selectPlace = useSelectPlaceStore((s) => s.selectPlace);
 
   useEffect(() => {
     loadKakaoMaps().then(() => {
@@ -20,7 +25,7 @@ export function KakaoMap() {
 
       console.log("Kakao Map initialized", map);
 
-      // OverlayManager 생성
+      // 마커 관리를 위한 overlayManager 생성
       const manager = new OverlayManager(map);
       managerRef.current = manager;
 
@@ -28,12 +33,66 @@ export function KakaoMap() {
       MAJOR_CITIES.forEach((city) => {
         manager.createOverlay(city);
       });
+
+      // 장소 분석을 위한 geocoder 생성
+      const geocoder = new kakao.maps.services.Geocoder();
+
+      // 지도 클릭 이벤트 설정
+      kakao.maps.event.addListener(
+        map,
+        "click",
+        (mouseEvent: kakao.maps.MouseEvent) => {
+          const latlng = mouseEvent.latLng;
+          const lng = latlng.getLng();
+          const lat = latlng.getLat();
+
+          geocoder.coord2Address(lng, lat, (result, status) => {
+            // 주소 정보가 없으면 굳이 처리하지 않는다
+            if (status !== kakao.maps.services.Status.OK || !result?.length) {
+              selectPlace({ lat, lng, sido: "" });
+              return;
+            }
+
+            const address = result[0].address as KakaoRegionAddress;
+
+            selectPlace({
+              lat,
+              lng,
+              sido: address.region_1depth_name,
+              sigungu: address.region_2depth_name,
+              dong: address.region_3depth_name,
+            });
+          });
+        }
+      );
     });
 
     return () => {
       managerRef.current?.clearAll();
     };
-  }, []);
+  }, [selectPlace]);
+
+  // 장소가 선택되면 디폴트 도시 마커는 전체 숨김 처리
+  useEffect(() => {
+    if (!managerRef.current) return;
+
+    const manager = managerRef.current;
+    manager.clearAll();
+
+    if (selectedPlace) {
+      // 주소 정보가 있을 때만 마커 표시
+      manager.createOverlay({
+        id: "selected-place",
+        lat: selectedPlace.lat,
+        lng: selectedPlace.lng,
+        sido: selectedPlace.sido,
+        sigungu: selectedPlace.sigungu,
+        dong: selectedPlace.dong,
+      });
+    } else {
+      manager.showAll();
+    }
+  }, [selectedPlace]);
 
   return <div id="map" ref={mapRef} className="w-full h-full"></div>;
 }
