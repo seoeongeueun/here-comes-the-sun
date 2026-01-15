@@ -1,12 +1,15 @@
 import { KakaoMap } from "@/widgets/kakao-maps";
+import { Dashboard } from "@/widgets/dashboard";
 
 export function MainPage() {
   return (
     <div className="h-full w-full flex flex-row">
-      <div className="h-full w-full">
+      <section className="p-10 w-full h-full">
         <KakaoMap />
-      </div>
-      <div className="h-full w-full"></div>
+      </section>
+      <section className="w-full h-full">
+        <Dashboard />
+      </section>
     </div>
   );
 }

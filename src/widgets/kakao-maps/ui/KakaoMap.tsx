@@ -95,5 +95,11 @@ export function KakaoMap() {
     }
   }, [selectedPlace]);
 
-  return <div id="map" ref={mapRef} className="w-full h-full"></div>;
+  return (
+    <div
+      id="map"
+      ref={mapRef}
+      className="w-full h-full rounded-xl border-4 border-white"
+    ></div>
+  );
 }
