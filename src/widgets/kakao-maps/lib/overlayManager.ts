@@ -74,6 +74,15 @@ export class OverlayManager {
     }
   }
 
+  // 특정 마커 하나만 완전히 삭제
+  deleteOverlay(cityId: string): void {
+    const item = this.overlays.get(cityId);
+    if (item) {
+      item.overlay.setMap(null);
+      this.overlays.delete(cityId);
+    }
+  }
+
   //특정 마커 하나만 보이기
   show(cityId: string): void {
     const item = this.overlays.get(cityId);

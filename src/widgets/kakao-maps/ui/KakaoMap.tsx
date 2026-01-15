@@ -5,7 +5,6 @@ import { OverlayManager } from "../lib/overlayManager";
 import "../styles.css";
 import { useSelectPlaceStore } from "@/features/select-place/model/store";
 import type { KakaoRegionAddress } from "../lib/types";
-import { simplifySido } from "@/shared/lib";
 
 export function KakaoMap() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -77,10 +76,10 @@ export function KakaoMap() {
     if (!managerRef.current) return;
 
     const manager = managerRef.current;
-    manager.clearAll();
 
-    if (selectedPlace) {
-      // 주소 정보가 있을 때만 마커 표시
+    if (selectedPlace && selectedPlace.sido && selectedPlace.sido.length > 0) {
+      // 주소가 있으면 기본 마커 숨기고 선택된 장소만 표시
+      manager.hideAll();
       manager.createOverlay({
         id: "selected-place",
         lat: selectedPlace.lat,
@@ -90,6 +89,8 @@ export function KakaoMap() {
         dong: selectedPlace.dong,
       });
     } else {
+      // 주소가 없으면 선택된 장소 완전히 삭제하고 기본 마커 표시
+      manager.deleteOverlay("selected-place");
       manager.showAll();
     }
   }, [selectedPlace]);
