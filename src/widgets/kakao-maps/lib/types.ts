@@ -4,3 +4,12 @@ export type KakaoRegionAddress = {
   region_2depth_name: string;
   region_3depth_name: string;
 };
+
+// geocoder 반환 결과 중 사용할 타입만 정의
+export type GeocoderResult = {
+  lat: number;
+  lng: number;
+  sido: string;
+  sigungu?: string;
+  dong?: string;
+};
