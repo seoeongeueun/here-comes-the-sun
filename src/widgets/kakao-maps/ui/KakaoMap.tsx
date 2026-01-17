@@ -11,6 +11,7 @@ import { useSelectPlaceStore } from "@/features/select-place";
 import { useCurrentLocationStore } from "@/features/current-location";
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { weatherQueries, convertWeatherCodeToEmoji } from "@/entities/weather";
+import { useToastStore } from "@/shared/ui";
 
 export function KakaoMap() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -22,6 +23,7 @@ export function KakaoMap() {
     (s) => s.setCurrentLocation
   );
   const currentLocation = useCurrentLocationStore((s) => s.currentLocation);
+  const show = useToastStore((s) => s.show);
 
   // 주요 도시들의 날씨 데이터
   const majorCitiesWeather = useQueries({
@@ -73,9 +75,16 @@ export function KakaoMap() {
           sido: "",
         });
       })
+
       .catch((error) => {
-        //TODO: code 1: 사용자가 위치 정보 제공 거부 -> 안내 모달 필요
         console.log("현재 위치 가져오기 실패:", error);
+        if (error.code === 1) {
+          show(
+            "현재 위치를 가져올 수 없습니다.\n위치 정보 제공을 허용해주세요."
+          );
+        } else {
+          show("현재 위치를 가져오는 중 오류가 발생했습니다.");
+        }
       });
   }, []);
 
