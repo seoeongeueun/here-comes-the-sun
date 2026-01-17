@@ -23,10 +23,20 @@ export function KakaoMap() {
   );
   const currentLocation = useCurrentLocationStore((s) => s.currentLocation);
 
+  // 주요 도시들의 날씨 데이터
   const majorCitiesWeather = useQueries({
     queries: MAJOR_CITIES.map((city) =>
       weatherQueries.nowByLatLng({ lat: city.lat, lng: city.lng })
     ),
+  });
+
+  // 선택된 장소의 날씨 데이터
+  const selectedPlaceWeather = useQuery({
+    ...weatherQueries.nowByLatLng({
+      lat: selectedPlace?.lat ?? NaN,
+      lng: selectedPlace?.lng ?? NaN,
+    }),
+    enabled: !!selectedPlace?.lat && !!selectedPlace?.lng,
   });
 
   const citiesEmojiAndTemp = MAJOR_CITIES.map((city, index) => {
@@ -44,8 +54,6 @@ export function KakaoMap() {
   useEffect(() => {
     const manager = managerRef.current;
     if (!manager) return;
-
-    console.log(citiesEmojiAndTemp);
 
     citiesEmojiAndTemp.forEach((c) => {
       if (!c.id) return;
@@ -158,12 +166,22 @@ export function KakaoMap() {
         sigungu: selectedPlace.sigungu,
         dong: selectedPlace.dong,
       });
+
+      // 선택된 장소의 날씨 데이터가 있으면 마커 업데이트
+      if (selectedPlaceWeather.data?.code != null) {
+        const emoji = convertWeatherCodeToEmoji(selectedPlaceWeather.data.code);
+        manager.updateCityWeather(
+          "selected-place",
+          emoji,
+          selectedPlaceWeather.data.temp ?? undefined
+        );
+      }
     } else {
       // 주소가 없으면 선택된 장소 완전히 삭제하고 기본 마커 표시
       manager.deleteOverlay("selected-place");
       manager.showAll();
     }
-  }, [selectedPlace]);
+  }, [selectedPlace, selectedPlaceWeather.data]);
 
   return (
     <div
