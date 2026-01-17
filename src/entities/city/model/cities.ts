@@ -2,8 +2,8 @@
 import type { City } from "./types";
 
 export const MAJOR_CITIES: City[] = [
-  { id: "seoul", sido: "서울", lat: 37.5665, lng: 126.978 },
   { id: "incheon", sido: "인천", lat: 37.4563, lng: 126.7052 },
+  { id: "seoul", sido: "서울", lat: 37.5665, lng: 126.978 },
   { id: "daejeon", sido: "대전", lat: 36.3504, lng: 127.3845 },
   { id: "daegu", sido: "대구", lat: 35.8714, lng: 128.6014 },
   { id: "ulsan", sido: "울산", lat: 35.5384, lng: 129.3114 },

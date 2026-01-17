@@ -140,4 +140,33 @@ export class OverlayManager {
     this.currentLocationDot.setMap(null);
     this.currentLocationDot = null;
   }
+
+  //특정 도시 마커의 날씨 이모지와 온도를 업데이트
+  updateCityWeather(cityId: string, emoji: string, temp?: number): void {
+    const item = this.overlays.get(cityId);
+    if (!item) return;
+
+    // 날씨 이모지 업데이트
+    const emojiElement = item.content.querySelector("#weather-emoji");
+    if (emojiElement) {
+      emojiElement.textContent = emoji;
+      // 로딩 애니메이션 제거
+      emojiElement.classList.remove(
+        "animate-[pulse_1.6s_ease-in-out_infinite]",
+        "bg-background"
+      );
+    }
+
+    // 온도 업데이트
+    if (temp !== undefined) {
+      const tempElement = item.content.querySelector("#temperature");
+      if (tempElement) {
+        tempElement.classList.remove(
+          "animate-[pulse_1.6s_ease-in-out_infinite]",
+          "bg-background"
+        );
+        tempElement.textContent = `${Math.round(temp)}°C`;
+      }
+    }
+  }
 }

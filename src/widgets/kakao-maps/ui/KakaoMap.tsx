@@ -9,6 +9,8 @@ import {
 import "../styles.css";
 import { useSelectPlaceStore } from "@/features/select-place";
 import { useCurrentLocationStore } from "@/features/current-location";
+import { useQuery, useQueries } from "@tanstack/react-query";
+import { weatherQueries, convertWeatherCodeToEmoji } from "@/entities/weather";
 
 export function KakaoMap() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -20,6 +22,38 @@ export function KakaoMap() {
     (s) => s.setCurrentLocation
   );
   const currentLocation = useCurrentLocationStore((s) => s.currentLocation);
+
+  const majorCitiesWeather = useQueries({
+    queries: MAJOR_CITIES.map((city) =>
+      weatherQueries.nowByLatLng({ lat: city.lat, lng: city.lng })
+    ),
+  });
+
+  const citiesEmojiAndTemp = MAJOR_CITIES.map((city, index) => {
+    const data = majorCitiesWeather[index].data;
+    const code = data?.code ?? null;
+
+    return {
+      id: city.id,
+      sido: city.sido,
+      temp: data?.temp ?? null,
+      emoji: code == null ? "…" : convertWeatherCodeToEmoji(code),
+    };
+  });
+
+  useEffect(() => {
+    const manager = managerRef.current;
+    if (!manager) return;
+
+    console.log(citiesEmojiAndTemp);
+
+    citiesEmojiAndTemp.forEach((c) => {
+      if (!c.id) return;
+      if (c.emoji === "…") return;
+
+      manager.updateCityWeather(c.id, c.emoji, c.temp ?? undefined);
+    });
+  }, [citiesEmojiAndTemp]);
 
   useEffect(() => {
     // 브라우저에서 현재 위치 가져오기
