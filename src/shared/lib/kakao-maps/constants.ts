@@ -1,4 +1,4 @@
-export const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 }; // 서울 시청
+export const DEFAULT_CENTER = { lat: 36.991, lng: 127.9259 }; // 충주로 시작점을 잡았다
 export const DEFAULT_LEVEL = 13;
 export const REGION_MAP: Record<string, string> = {
   서울특별시: "서울",
