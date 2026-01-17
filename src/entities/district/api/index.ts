@@ -1,0 +1,1 @@
+export { fetchDistricts } from "./fetchDistricts";
