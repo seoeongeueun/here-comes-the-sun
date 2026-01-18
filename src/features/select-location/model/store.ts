@@ -9,6 +9,7 @@ import { roundToThreeDecimals } from "@/shared/lib";
 export const useSelectLocationStore = create<SelectLocationState>((set) => ({
   selectedLocation: null,
   tmpSelectedLocation: null,
+  isSearchInProgress: false,
   selectLocation: (location) =>
     set({
       selectedLocation: {
@@ -19,7 +20,15 @@ export const useSelectLocationStore = create<SelectLocationState>((set) => ({
       },
     }),
   clearLocation: () =>
-    set({ selectedLocation: null, tmpSelectedLocation: null }),
+    set({
+      selectedLocation: null,
+      tmpSelectedLocation: null,
+      isSearchInProgress: false,
+    }),
+  setSearchInProgress: (inProgress) =>
+    set({
+      isSearchInProgress: inProgress,
+    }),
   tmpSelectLocation: (address) =>
     set({
       tmpSelectedLocation: address,

@@ -5,8 +5,16 @@ import { useSelectLocationStore } from "@/features/select-location";
 
 export function SearchBar() {
   const tmpSelectLocation = useSelectLocationStore((s) => s.tmpSelectLocation);
+  const isSearchInProgress = useSelectLocationStore(
+    (s) => s.isSearchInProgress,
+  );
+  const setSearchInProgress = useSelectLocationStore(
+    (s) => s.setSearchInProgress,
+  );
+
   const index = useDistrictsIndex();
   const [input, setInput] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
 
   // 유저가 입력한 주소에 대한 주소 제안
   const suggestions = useMemo(() => {
@@ -20,6 +28,8 @@ export function SearchBar() {
 
     if (!input.trim()) return;
     tmpSelectLocation(input.trim()); // 입력한 주소를 임시 선택 장소로 설정
+    setSearchInProgress(true); // 검색 중 상태로 설정
+    setIsFocused(false);
   };
 
   return (
@@ -39,15 +49,26 @@ export function SearchBar() {
           onChange={(e) => setInput(e.target.value)}
           value={input}
           className="placeholder:text-background flex-1 focus:outline-theme p-1"
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
         <button
           type="submit"
+          disabled={isSearchInProgress}
           className="text-background w-fit cursor-pointer hover:text-black transition-colors px-2"
         >
-          검색
+          {!isSearchInProgress ? (
+            "검색"
+          ) : (
+            <img
+              src="/assets/spinner.svg"
+              alt="검색"
+              className="inline-block w-6 h-6 shrink-0 ml-1 animate-spin"
+            />
+          )}
         </button>
       </form>
-      {suggestions.length > 0 && (
+      {suggestions.length > 0 && isFocused && (
         <div className="bg-white text-xxs rounded-b-sm opacity-90 w-full max-h-40 overflow-auto">
           {suggestions.map((s) => (
             <button

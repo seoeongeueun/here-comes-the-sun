@@ -31,6 +31,9 @@ export function KakaoMap() {
   );
   const currentLocation = useCurrentLocationStore((s) => s.currentLocation);
   const show = useToastStore((s) => s.show);
+  const setSearchInProgress = useSelectLocationStore(
+    (s) => s.setSearchInProgress,
+  );
 
   const [showMapError, setShowMapError] = useState(false); // 지도 로드 오류 상태
 
@@ -175,7 +178,14 @@ export function KakaoMap() {
   }, [currentLocation, setCurrentLocation]);
 
   useEffect(() => {
-    if (!tmpSelectedLocation || !geocoderRef.current) return;
+    if (!tmpSelectedLocation || !geocoderRef.current) {
+      setSearchInProgress(false);
+      clearLocation();
+      if (tmpSelectedLocation && !geocoderRef.current) {
+        show("지도를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+      }
+      return;
+    }
 
     const geocoder = geocoderRef.current;
 
@@ -185,6 +195,7 @@ export function KakaoMap() {
         clearLocation();
 
         selectLocation(location);
+        setSearchInProgress(false);
       })
       .catch((error) => {
         console.error("주소를 좌표로 변환하는 중 오류 발생:", error);
