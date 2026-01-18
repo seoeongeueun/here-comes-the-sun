@@ -27,18 +27,25 @@ export function coord2AddressAsync(
 }
 
 // geocoder를 이용해 주소를 좌표로 변환하는 함수
-export function addressToCoord(
+export function addressToCoordAsync(
   geocoder: kakao.maps.services.Geocoder,
   address: string,
-): Promise<{ lat: number; lng: number }> {
+): Promise<GeocoderResult> {
   return new Promise((resolve, reject) => {
     geocoder.addressSearch(address, (result, status) => {
       if (status !== kakao.maps.services.Status.OK || !result?.[0]) {
         reject(new Error(`addressSearch failed: ${status}`));
         return;
       }
-      const { x, y } = result[0];
-      resolve({ lat: Number(y), lng: Number(x) });
+
+      const address = result[0].address as KakaoRegionAddress;
+      resolve({
+        lat: Number(result[0].y),
+        lng: Number(result[0].x),
+        sido: address.region_1depth_name,
+        sigungu: address.region_2depth_name,
+        dong: address.region_3depth_name,
+      });
     });
   });
 }

@@ -3,7 +3,7 @@ export { DEFAULT_CENTER, DEFAULT_LEVEL } from "./kakao-maps/constants";
 export { simplifySido } from "./kakao-maps/simplifySido";
 export {
   coord2AddressAsync,
-  addressToCoord,
+  addressToCoordAsync,
   getCurrentPositionAsync,
 } from "./kakao-maps/geolocation";
 
