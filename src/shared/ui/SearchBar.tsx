@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
 import { useDistrictsIndex } from "@/features/search-address/model";
 import { suggestAddress } from "@/features/suggest-address/model";
+import { useSelectPlaceStore } from "@/features/select-place";
 
 export function SearchBar() {
+  const tmpSelectPlace = useSelectPlaceStore((s) => s.tmpSelectPlace);
   const index = useDistrictsIndex();
   const [input, setInput] = useState("");
 
@@ -13,10 +15,16 @@ export function SearchBar() {
     return suggestAddress(input, index);
   }, [input, index]);
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    tmpSelectPlace(input.trim()); // 입력한 주소를 임시 선택 장소로 설정
+  };
+
   return (
     <div className="flex flex-col">
       <form
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={handleSubmit}
         className="flex items-center justify-center gap-2 rounded-sm bg-white text-black text-xs p-1"
       >
         <label htmlFor="address-search" className="sr-only">

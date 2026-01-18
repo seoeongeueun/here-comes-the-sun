@@ -8,6 +8,7 @@ import { roundToThreeDecimals } from "@/shared/lib";
 // 좌표는 소수점 세자리(대략 100m 이내 오차)로 반올림
 export const useSelectPlaceStore = create<SelectPlaceState>((set) => ({
   selectedPlace: null,
+  tmpSelectedPlace: null,
   selectPlace: (place) =>
     set({
       selectedPlace: {
@@ -17,5 +18,9 @@ export const useSelectPlaceStore = create<SelectPlaceState>((set) => ({
         sido: place.sido ? simplifySido(place.sido) : place.sido,
       },
     }),
-  clearPlace: () => set({ selectedPlace: null }),
+  clearPlace: () => set({ selectedPlace: null, tmpSelectedPlace: null }),
+  tmpSelectPlace: (address) =>
+    set({
+      tmpSelectedPlace: address,
+    }), // 임시로 주소만 저장하는 함수
 }));
