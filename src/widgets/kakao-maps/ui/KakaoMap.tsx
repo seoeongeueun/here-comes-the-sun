@@ -9,7 +9,7 @@ import {
 } from "@/shared/lib";
 import { MAJOR_CITIES } from "@/entities/city";
 import { OverlayManager } from "../lib/overlayManager";
-import { useSelectPlaceStore } from "@/features/select-place";
+import { useSelectLocationStore } from "@/features/select-location";
 import { useCurrentLocationStore } from "@/features/current-location";
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { weatherQueries, convertWeatherCodeToEmoji } from "@/entities/weather";
@@ -20,10 +20,12 @@ export function KakaoMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const managerRef = useRef<OverlayManager | null>(null);
   const geocoderRef = useRef<kakao.maps.services.Geocoder | null>(null);
-  const selectedPlace = useSelectPlaceStore((s) => s.selectedPlace);
-  const selectPlace = useSelectPlaceStore((s) => s.selectPlace);
-  const tmpSelectedPlace = useSelectPlaceStore((s) => s.tmpSelectedPlace);
-  const clearPlace = useSelectPlaceStore((s) => s.clearPlace);
+  const selectedLocation = useSelectLocationStore((s) => s.selectedLocation);
+  const selectLocation = useSelectLocationStore((s) => s.selectLocation);
+  const tmpSelectedLocation = useSelectLocationStore(
+    (s) => s.tmpSelectedLocation,
+  );
+  const clearLocation = useSelectLocationStore((s) => s.clearLocation);
   const setCurrentLocation = useCurrentLocationStore(
     (s) => s.setCurrentLocation,
   );
@@ -40,12 +42,12 @@ export function KakaoMap() {
   });
 
   // 선택된 장소의 날씨 데이터
-  const selectedPlaceWeather = useQuery({
+  const selectedLocationWeather = useQuery({
     ...weatherQueries.nowByLatLng({
-      lat: selectedPlace?.lat ?? NaN,
-      lng: selectedPlace?.lng ?? NaN,
+      lat: selectedLocation?.lat ?? NaN,
+      lng: selectedLocation?.lng ?? NaN,
     }),
-    enabled: !!selectedPlace?.lat && !!selectedPlace?.lng,
+    enabled: !!selectedLocation?.lat && !!selectedLocation?.lng,
   });
 
   const citiesEmojiAndTemp = MAJOR_CITIES.map((city, index) => {
@@ -121,7 +123,7 @@ export function KakaoMap() {
               lng,
               lat,
             );
-            selectPlace(addressInfo);
+            selectLocation(addressInfo);
           },
         );
 
@@ -173,16 +175,16 @@ export function KakaoMap() {
   }, [currentLocation, setCurrentLocation]);
 
   useEffect(() => {
-    if (!tmpSelectedPlace || !geocoderRef.current) return;
+    if (!tmpSelectedLocation || !geocoderRef.current) return;
 
     const geocoder = geocoderRef.current;
 
     //임시 주소의 좌표를 검색해서 선택된 장소로 확정
-    addressToCoordAsync(geocoder, tmpSelectedPlace)
+    addressToCoordAsync(geocoder, tmpSelectedLocation)
       .then((location) => {
-        clearPlace();
+        clearLocation();
 
-        selectPlace(location);
+        selectLocation(location);
       })
       .catch((error) => {
         console.error("주소를 좌표로 변환하는 중 오류 발생:", error);
@@ -190,7 +192,7 @@ export function KakaoMap() {
           "입력한 주소의 위치를 찾을 수 없습니다. 주소를 다시 확인해주세요.",
         );
       });
-  }, [tmpSelectedPlace]);
+  }, [tmpSelectedLocation]);
 
   // 장소가 선택되면 디폴트 도시 마커는 전체 숨김 처리
   useEffect(() => {
@@ -198,33 +200,39 @@ export function KakaoMap() {
 
     const manager = managerRef.current;
 
-    if (selectedPlace && selectedPlace.sido && selectedPlace.sido.length > 0) {
+    if (
+      selectedLocation &&
+      selectedLocation.sido &&
+      selectedLocation.sido.length > 0
+    ) {
       // 주소가 있으면 기본 마커 숨기고 선택된 장소만 표시
       manager.hideAll();
       manager.createOverlay({
-        id: "selected-place",
-        lat: selectedPlace.lat,
-        lng: selectedPlace.lng,
-        sido: selectedPlace.sido,
-        sigungu: selectedPlace.sigungu,
-        dong: selectedPlace.dong,
+        id: "selected-location",
+        lat: selectedLocation.lat,
+        lng: selectedLocation.lng,
+        sido: selectedLocation.sido,
+        sigungu: selectedLocation.sigungu,
+        dong: selectedLocation.dong,
       });
 
       // 선택된 장소의 날씨 데이터가 있으면 마커 업데이트
-      if (selectedPlaceWeather.data?.code != null) {
-        const emoji = convertWeatherCodeToEmoji(selectedPlaceWeather.data.code);
+      if (selectedLocationWeather.data?.code != null) {
+        const emoji = convertWeatherCodeToEmoji(
+          selectedLocationWeather.data.code,
+        );
         manager.updateCityWeather(
-          "selected-place",
+          "selected-location",
           emoji,
-          selectedPlaceWeather.data.temp ?? undefined,
+          selectedLocationWeather.data.temp ?? undefined,
         );
       }
     } else {
       // 주소가 없으면 선택된 장소 완전히 삭제하고 기본 마커 표시
-      manager.deleteOverlay("selected-place");
+      manager.deleteOverlay("selected-location");
       manager.showAll();
     }
-  }, [selectedPlace, selectedPlaceWeather.data]);
+  }, [selectedLocation, selectedLocationWeather.data]);
 
   return (
     <div id="map" ref={mapRef} className="w-full h-full bg-white rounded-md">

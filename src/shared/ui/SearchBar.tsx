@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { useDistrictsIndex } from "@/features/search-address/model";
 import { suggestAddress } from "@/features/suggest-address/model";
-import { useSelectPlaceStore } from "@/features/select-place";
+import { useSelectLocationStore } from "@/features/select-location";
 
 export function SearchBar() {
-  const tmpSelectPlace = useSelectPlaceStore((s) => s.tmpSelectPlace);
+  const tmpSelectLocation = useSelectLocationStore((s) => s.tmpSelectLocation);
   const index = useDistrictsIndex();
   const [input, setInput] = useState("");
 
@@ -18,7 +18,8 @@ export function SearchBar() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    tmpSelectPlace(input.trim()); // 입력한 주소를 임시 선택 장소로 설정
+    if (!input.trim()) return;
+    tmpSelectLocation(input.trim()); // 입력한 주소를 임시 선택 장소로 설정
   };
 
   return (
