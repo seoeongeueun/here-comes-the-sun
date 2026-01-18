@@ -53,6 +53,15 @@ export function KakaoMap() {
     enabled: !!selectedLocation?.lat && !!selectedLocation?.lng,
   });
 
+  //현 위치 날씨 데이터
+  const currentLocationWeather = useQuery({
+    ...weatherQueries.byLatLng({
+      lat: currentLocation?.lat ?? NaN,
+      lng: currentLocation?.lng ?? NaN,
+    }),
+    enabled: !!currentLocation?.lat && !!currentLocation?.lng,
+  });
+
   const citiesEmojiAndTemp = MAJOR_CITIES.map((city, index) => {
     const data = majorCitiesWeather[index].data;
     const code = data?.code ?? null;
