@@ -29,6 +29,8 @@ export type OpenMeteoForecastResponse = {
     time: string[];
     temperature_2m_min?: number[];
     temperature_2m_max?: number[];
+    precipitation_probability_max?: number[];
+    precipitation_hours?: number[];
     precipitation_sum?: number[];
     snowfall_sum?: number[];
   };

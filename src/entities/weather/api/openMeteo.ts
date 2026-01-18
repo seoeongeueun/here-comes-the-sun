@@ -7,7 +7,7 @@ import type {
 
 export function fetchWeatherByLatLng(
   { lat, lng }: WeatherFetchParams,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) {
   const sp = new URLSearchParams({
     latitude: String(lat),
@@ -16,7 +16,7 @@ export function fetchWeatherByLatLng(
     current: "temperature_2m,weather_code,precipitation,snowfall",
     hourly: "temperature_2m,weather_code,precipitation,snowfall",
     daily:
-      "temperature_2m_min,temperature_2m_max,precipitation_sum,snowfall_sum",
+      "temperature_2m_min,temperature_2m_max,precipitation_sum,snowfall_sum,precipitation_hours,precipitation_probability_max",
     models: "kma_seamless",
   });
 
