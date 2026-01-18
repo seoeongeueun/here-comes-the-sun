@@ -33,7 +33,7 @@ export function SearchBar() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col relative">
       <form
         onSubmit={handleSubmit}
         className="flex items-center justify-center gap-2 rounded-sm bg-white text-black text-xs p-1"
@@ -69,7 +69,10 @@ export function SearchBar() {
         </button>
       </form>
       {suggestions.length > 0 && isFocused && (
-        <div className="bg-white text-xxs rounded-b-sm opacity-90 w-full max-h-40 overflow-auto">
+        <div
+          id="suggestions"
+          className="absolute top-8 bg-white text-xxs rounded-b-sm opacity-90 w-full max-h-40 overflow-auto z-30"
+        >
           {suggestions.map((s) => (
             <button
               key={s.label}
