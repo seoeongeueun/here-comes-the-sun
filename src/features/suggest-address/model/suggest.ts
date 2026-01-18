@@ -1,6 +1,13 @@
 // entities/address/model/suggest.ts
 import type { DistrictIndex } from "@/entities/district/model";
 import { simplifySido } from "@/shared/lib";
+import {
+  normalizeQuery,
+  joinLabel,
+  uniqueByLabel,
+  makeKey,
+  splitKey,
+} from "./normalize";
 
 export type SuggestAddress = {
   level: "sido" | "sigungu" | "dong";
@@ -163,40 +170,6 @@ export function suggestAddress(
       sigungu,
     })),
   );
-}
-
-/* ---------------- helpers ---------------- */
-
-function normalizeQuery(q: string): string[] {
-  return (q ?? "")
-    .trim()
-    .replace(/[-/]+/g, " ")
-    .replace(/\s+/g, " ")
-    .split(" ")
-    .filter(Boolean);
-}
-
-function joinLabel(parts: string[]): string {
-  return parts.filter(Boolean).join(" ");
-}
-
-function uniqueByLabel<T extends { label: string }>(list: T[]): T[] {
-  const seen = new Set<string>();
-  const out: T[] = [];
-  for (const x of list) {
-    if (seen.has(x.label)) continue;
-    seen.add(x.label);
-    out.push(x);
-  }
-  return out;
-}
-
-function makeKey(sido: string, sigungu: string) {
-  return `${sido}+${sigungu}`;
-}
-function splitKey(key: string): [string, string] {
-  const [sido, sigungu] = key.split("+");
-  return [sido, sigungu];
 }
 
 /** 시도 후보: 원본/축약 모두 startsWith 우선 */
