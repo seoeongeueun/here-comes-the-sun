@@ -38,7 +38,7 @@
 
   --theme: rgb(255, 207, 48);
   --secondary: rgb(85, 85, 85);
-  --error: rgb(255, 31, 31);
+  --error: oklch(70.5% 0.213 47.604);
   --skeleton: #c8c9cc;
   --skeleton-rgb: 200, 201, 204;
   --text: black;

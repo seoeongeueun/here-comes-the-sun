@@ -1,5 +1,6 @@
 import { Header } from "./Header";
 import { useCurrentLocationStore } from "@/features/current-location";
+import { SearchBar } from "@/shared/ui";
 
 export function Dashboard() {
   const currentLocation = useCurrentLocationStore((s) => s.currentLocation);
@@ -14,6 +15,7 @@ export function Dashboard() {
             : "Unknown"}
         </span>
       </div>
+      <SearchBar />
     </div>
   );
 }
