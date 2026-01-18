@@ -1,6 +1,7 @@
 import { Header } from "./Header";
 import { useCurrentLocationStore } from "@/features/current-location";
 import { SearchBar } from "@/shared/ui";
+import { WeatherSection } from "@/widgets/weather";
 
 export function Dashboard() {
   const currentLocation = useCurrentLocationStore((s) => s.currentLocation);
@@ -16,6 +17,7 @@ export function Dashboard() {
         </span>
       </div>
       <SearchBar />
+      <WeatherSection />
     </div>
   );
 }
