@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import { loadKakaoMaps, DEFAULT_CENTER, DEFAULT_LEVEL } from "@/shared/lib";
-import { MAJOR_CITIES } from "@/entities/city";
-import { OverlayManager } from "../lib/overlayManager";
 import {
+  loadKakaoMaps,
+  DEFAULT_CENTER,
+  DEFAULT_LEVEL,
   coord2AddressAsync,
   getCurrentPositionAsync,
-} from "../lib/geolocation";
-import "../styles.css";
+} from "@/shared/lib";
+import { MAJOR_CITIES } from "@/entities/city";
+import { OverlayManager } from "../lib/overlayManager";
 import { useSelectPlaceStore } from "@/features/select-place";
 import { useCurrentLocationStore } from "@/features/current-location";
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { weatherQueries, convertWeatherCodeToEmoji } from "@/entities/weather";
 import { useToastStore } from "@/shared/ui";
+import "../styles.css";
 
 export function KakaoMap() {
   const mapRef = useRef<HTMLDivElement>(null);

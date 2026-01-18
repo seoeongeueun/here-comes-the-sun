@@ -11,7 +11,7 @@ export function fillCityMarkerContent(city: City) {
                 <h3>${city.sido}</h3>
                 <p id="temperature" class="text-xxs text-orange-500 min-w-4 h-4 bg-background rounded-sm animate-[pulse_1.6s_ease-in-out_infinite] transition-colors duration-300"></p>
             </div>
-            <span class="text-xxs truncate w-full text-secondary">${
+            <span id="city-secondary" class="text-xxs truncate w-full text-secondary">${
               city.sigungu ?? ""
             } ${city.dong ?? ""}</span>
         </div>

@@ -4,7 +4,7 @@ import type { KakaoRegionAddress, GeocoderResult } from "./types";
 export function coord2AddressAsync(
   geocoder: kakao.maps.services.Geocoder,
   lng: number,
-  lat: number
+  lat: number,
 ): Promise<GeocoderResult> {
   return new Promise((resolve) => {
     geocoder.coord2Address(lng, lat, (result, status) => {
@@ -22,6 +22,23 @@ export function coord2AddressAsync(
         sigungu: address.region_2depth_name,
         dong: address.region_3depth_name,
       });
+    });
+  });
+}
+
+// geocoder를 이용해 주소를 좌표로 변환하는 함수
+export function addressToCoord(
+  geocoder: kakao.maps.services.Geocoder,
+  address: string,
+): Promise<{ lat: number; lng: number }> {
+  return new Promise((resolve, reject) => {
+    geocoder.addressSearch(address, (result, status) => {
+      if (status !== kakao.maps.services.Status.OK || !result?.[0]) {
+        reject(new Error(`addressSearch failed: ${status}`));
+        return;
+      }
+      const { x, y } = result[0];
+      resolve({ lat: Number(y), lng: Number(x) });
     });
   });
 }
@@ -46,7 +63,7 @@ export function getCurrentPositionAsync(): Promise<{
       },
       (error) => {
         reject(error);
-      }
+      },
     );
   });
 }
