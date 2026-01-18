@@ -1,4 +1,4 @@
-import type { DistrictIndex } from "../model";
+import type { DistrictIndex } from ".";
 import { convertAndSort } from "@/shared/lib";
 
 //json 데이터로 검색용 인덱스 맵 생성

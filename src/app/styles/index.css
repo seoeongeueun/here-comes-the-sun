@@ -46,7 +46,7 @@
 }
 
 
-::-webkit-scrollbar {
+::-webkit-scrollbar:not(#address-search){
   display: none;
 }
 

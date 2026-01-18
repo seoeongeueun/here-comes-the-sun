@@ -1,2 +1,2 @@
 export type { DistrictIndex } from "./types";
-export { buildDistrictsIndex } from "./buildDistrictIndex";
+export { buildDistrictsIndex } from "./buildDistrictsIndex";
