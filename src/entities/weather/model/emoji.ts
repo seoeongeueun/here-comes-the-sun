@@ -1,4 +1,4 @@
-export type WeatherEmoji = "☀️" | "⛅" | "☁️" | "☔" | "☃️" | "⛈️";
+export type WeatherEmoji = "☀️" | "⛅" | "☁️" | "☔" | "☃️" | "⛈️" | "❔";
 
 export type WeatherEmojiInput = {
   weatherCode?: number | null;
@@ -6,7 +6,9 @@ export type WeatherEmojiInput = {
   snowfall?: number | null; // cm
 };
 
-export function convertWeatherCodeToEmoji(code: number): WeatherEmoji {
+export function convertWeatherCodeToEmoji(code: number | null): WeatherEmoji {
+  if (code === null) return "❔";
+
   if (code === 0) return "☀️"; // 맑음
   if (code === 1) return "⛅"; // 구름 조금
   if (code === 2 || code === 3) return "☁️"; // 구름 많음/흐림
