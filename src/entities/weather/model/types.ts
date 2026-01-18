@@ -35,3 +35,6 @@ export type OpenMeteoForecastResponse = {
     snowfall_sum?: number[];
   };
 };
+
+//open meteo에서 받은 hourly 데이터를 파싱할 것이기 때문에
+export type OpenMeteoHourly = NonNullable<OpenMeteoForecastResponse["hourly"]>;
