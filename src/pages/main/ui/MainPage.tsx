@@ -3,7 +3,7 @@ import { Dashboard } from "@/widgets/dashboard";
 import { usePrefetchCitiesWeather } from "@/features/prefetch-cities-weather";
 
 export function MainPage() {
-  usePrefetchCitiesWeather();
+  //usePrefetchCitiesWeather();
 
   return (
     <div className="h-full w-full flex flex-row">

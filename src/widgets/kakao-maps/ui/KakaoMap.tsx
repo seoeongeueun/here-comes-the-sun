@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { loadKakaoMaps, DEFAULT_CENTER, DEFAULT_LEVEL } from "@/shared/lib";
 import { MAJOR_CITIES } from "@/entities/city";
 import { OverlayManager } from "../lib/overlayManager";
@@ -20,15 +20,17 @@ export function KakaoMap() {
   const selectedPlace = useSelectPlaceStore((s) => s.selectedPlace);
   const selectPlace = useSelectPlaceStore((s) => s.selectPlace);
   const setCurrentLocation = useCurrentLocationStore(
-    (s) => s.setCurrentLocation
+    (s) => s.setCurrentLocation,
   );
   const currentLocation = useCurrentLocationStore((s) => s.currentLocation);
   const show = useToastStore((s) => s.show);
 
+  const [showMapError, setShowMapError] = useState(false); // 지도 로드 오류 상태
+
   // 주요 도시들의 날씨 데이터
   const majorCitiesWeather = useQueries({
     queries: MAJOR_CITIES.map((city) =>
-      weatherQueries.nowByLatLng({ lat: city.lat, lng: city.lng })
+      weatherQueries.nowByLatLng({ lat: city.lat, lng: city.lng }),
     ),
   });
 
@@ -80,7 +82,7 @@ export function KakaoMap() {
         console.log("현재 위치 가져오기 실패:", error);
         if (error.code === 1) {
           show(
-            "현재 위치를 가져올 수 없습니다.\n위치 정보 제공을 허용해주세요."
+            "현재 위치를 가져올 수 없습니다.\n위치 정보 제공을 허용해주세요.",
           );
         } else {
           show("현재 위치를 가져오는 중 오류가 발생했습니다.");
@@ -89,44 +91,51 @@ export function KakaoMap() {
   }, []);
 
   useEffect(() => {
-    loadKakaoMaps().then(() => {
-      const map = new kakao.maps.Map(mapRef.current!, {
-        center: new kakao.maps.LatLng(DEFAULT_CENTER.lat, DEFAULT_CENTER.lng),
-        level: DEFAULT_LEVEL,
+    loadKakaoMaps()
+      .then(() => {
+        const map = new kakao.maps.Map(mapRef.current!, {
+          center: new kakao.maps.LatLng(DEFAULT_CENTER.lat, DEFAULT_CENTER.lng),
+          level: DEFAULT_LEVEL,
+        });
+
+        console.log("Kakao Map initialized", map);
+
+        setShowMapError(false);
+
+        // 지도 클릭 이벤트 설정
+        kakao.maps.event.addListener(
+          map,
+          "click",
+          async (mouseEvent: kakao.maps.MouseEvent) => {
+            const latlng = mouseEvent.latLng;
+            const lng = latlng.getLng();
+            const lat = latlng.getLat();
+
+            const addressInfo = await coord2AddressAsync(
+              geocoderRef.current!,
+              lng,
+              lat,
+            );
+            selectPlace(addressInfo);
+          },
+        );
+
+        // 마커 관리를 위한 overlayManager 생성
+        const manager = new OverlayManager(map);
+        managerRef.current = manager;
+
+        // 모든 마커 생성
+        MAJOR_CITIES.forEach((city) => {
+          manager.createOverlay(city);
+        });
+
+        // 장소 분석을 위한 geocoder
+        geocoderRef.current = new kakao.maps.services.Geocoder();
+      })
+      .catch((e) => {
+        console.error("Failed to load Kakao Maps:", e);
+        setShowMapError(true);
       });
-
-      console.log("Kakao Map initialized", map);
-
-      // 지도 클릭 이벤트 설정
-      kakao.maps.event.addListener(
-        map,
-        "click",
-        async (mouseEvent: kakao.maps.MouseEvent) => {
-          const latlng = mouseEvent.latLng;
-          const lng = latlng.getLng();
-          const lat = latlng.getLat();
-
-          const addressInfo = await coord2AddressAsync(
-            geocoderRef.current!,
-            lng,
-            lat
-          );
-          selectPlace(addressInfo);
-        }
-      );
-
-      // 마커 관리를 위한 overlayManager 생성
-      const manager = new OverlayManager(map);
-      managerRef.current = manager;
-
-      // 모든 마커 생성
-      MAJOR_CITIES.forEach((city) => {
-        manager.createOverlay(city);
-      });
-
-      // 장소 분석을 위한 geocoder
-      geocoderRef.current = new kakao.maps.services.Geocoder();
-    });
 
     return () => {
       managerRef.current?.clearAll();
@@ -145,7 +154,7 @@ export function KakaoMap() {
       coord2AddressAsync(
         geocoderRef.current,
         currentLocation.lng,
-        currentLocation.lat
+        currentLocation.lat,
       ).then((addressInfo) => {
         setCurrentLocation(addressInfo);
 
@@ -182,7 +191,7 @@ export function KakaoMap() {
         manager.updateCityWeather(
           "selected-place",
           emoji,
-          selectedPlaceWeather.data.temp ?? undefined
+          selectedPlaceWeather.data.temp ?? undefined,
         );
       }
     } else {
@@ -193,10 +202,13 @@ export function KakaoMap() {
   }, [selectedPlace, selectedPlaceWeather.data]);
 
   return (
-    <div
-      id="map"
-      ref={mapRef}
-      className="w-full h-full rounded-xl border-4 border-white shadow-xl"
-    ></div>
+    <div id="map" ref={mapRef} className="w-full h-full bg-white rounded-md">
+      {showMapError && (
+        <div className="text-background text-s flex flex-col justify-self-center items-center justify-center w-fit h-full pointer-events-none">
+          <h3>⚡ 카카오 지도를 불러올 수 없습니다.</h3>
+          <span>인터넷 연결 또는 남은 사용량을 확인해주세요.</span>
+        </div>
+      )}
+    </div>
   );
 }

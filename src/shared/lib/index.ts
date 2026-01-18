@@ -4,3 +4,5 @@ export { simplifySido } from "./kakao-maps/simplifySido";
 
 export { roundToThreeDecimals } from "./tools";
 export { fetchWithConcurrency } from "./fetchWithConcurrency";
+
+export { convertAndSort } from "./convertAndSort";
