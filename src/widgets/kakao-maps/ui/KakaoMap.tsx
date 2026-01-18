@@ -5,6 +5,7 @@ import {
   DEFAULT_LEVEL,
   coord2AddressAsync,
   getCurrentPositionAsync,
+  addressToCoordAsync,
 } from "@/shared/lib";
 import { MAJOR_CITIES } from "@/entities/city";
 import { OverlayManager } from "../lib/overlayManager";
@@ -21,6 +22,8 @@ export function KakaoMap() {
   const geocoderRef = useRef<kakao.maps.services.Geocoder | null>(null);
   const selectedPlace = useSelectPlaceStore((s) => s.selectedPlace);
   const selectPlace = useSelectPlaceStore((s) => s.selectPlace);
+  const tmpSelectedPlace = useSelectPlaceStore((s) => s.tmpSelectedPlace);
+  const clearPlace = useSelectPlaceStore((s) => s.clearPlace);
   const setCurrentLocation = useCurrentLocationStore(
     (s) => s.setCurrentLocation,
   );
@@ -168,6 +171,26 @@ export function KakaoMap() {
       });
     }
   }, [currentLocation, setCurrentLocation]);
+
+  useEffect(() => {
+    if (!tmpSelectedPlace || !geocoderRef.current) return;
+
+    const geocoder = geocoderRef.current;
+
+    //임시 주소의 좌표를 검색해서 선택된 장소로 확정
+    addressToCoordAsync(geocoder, tmpSelectedPlace)
+      .then((location) => {
+        clearPlace();
+
+        selectPlace(location);
+      })
+      .catch((error) => {
+        console.error("주소를 좌표로 변환하는 중 오류 발생:", error);
+        show(
+          "입력한 주소의 위치를 찾을 수 없습니다. 주소를 다시 확인해주세요.",
+        );
+      });
+  }, [tmpSelectedPlace]);
 
   // 장소가 선택되면 디폴트 도시 마커는 전체 숨김 처리
   useEffect(() => {

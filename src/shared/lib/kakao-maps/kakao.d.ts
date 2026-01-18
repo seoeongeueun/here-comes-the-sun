@@ -14,7 +14,7 @@ declare global {
       class Map {
         constructor(
           container: HTMLElement,
-          options: { center: LatLng; level?: number }
+          options: { center: LatLng; level?: number },
         );
       }
 
@@ -38,7 +38,7 @@ declare global {
         function addListener(
           target: Map,
           type: string,
-          callback: (mouseEvent: MouseEvent) => void
+          callback: (mouseEvent: MouseEvent) => void,
         ): void;
       }
 
@@ -48,11 +48,15 @@ declare global {
           coord2Address(
             lng: number,
             lat: number,
-            callback: (result: GeocoderResult[], status: string) => void
+            callback: (result: GeocoderResult[], status: string) => void,
           ): void;
           address2coord(
             address: string,
-            callback: (result: GeocoderResult[], status: string) => void
+            callback: (result: GeocoderResult[], status: string) => void,
+          ): void;
+          addressSearch(
+            address: string,
+            callback: (result: AddressSearchResult[], status: string) => void,
           ): void;
         }
 
@@ -70,6 +74,34 @@ declare global {
             region_3depth_name: string;
             x: number;
             y: number;
+          };
+        }
+
+        interface AddressSearchResult {
+          address_name: string;
+          address_type: string;
+          x: string;
+          y: string;
+          road_address?: {
+            address_name: string;
+            region_1depth_name: string;
+            region_2depth_name: string;
+            region_3depth_name: string;
+            road_name: string;
+            underground_yn: string;
+            main_building_no: string;
+            sub_building_no: string;
+            building_name: string;
+            zone_no: string;
+          };
+          address?: {
+            address_name: string;
+            region_1depth_name: string;
+            region_2depth_name: string;
+            region_3depth_name: string;
+            mountain_yn: string;
+            main_building_no: string;
+            sub_building_no: string;
           };
         }
       }
