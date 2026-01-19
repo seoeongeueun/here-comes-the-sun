@@ -76,3 +76,18 @@ html, #root {
   color: var(--text);
 }
 
+/* 공용 섹션 스타일 */
+section > header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  font-size: var(--text-s);
+  padding: 12px 0;
+}
+
+section > header > h2 {
+  font-size: var(--text-sm);
+}
