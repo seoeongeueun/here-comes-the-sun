@@ -91,3 +91,19 @@ section > header {
 section > header > h2 {
   font-size: var(--text-sm);
 }
+
+.star-icon {
+  width: 17px;  
+  aspect-ratio: 1;
+  background: var(--background);
+  clip-path: polygon(50% 0,79% 90%,2% 35%,98% 35%,21% 90%); 
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.star-icon.selected{
+  width: 17px;  
+  aspect-ratio: 1;
+  background: var(--theme);
+  clip-path: polygon(50% 0,79% 90%,2% 35%,98% 35%,21% 90%); 
+}
