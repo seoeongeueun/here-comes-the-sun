@@ -93,7 +93,7 @@ section > header > h2 {
 }
 
 .star-icon {
-  width: 17px;  
+  width: 18px;  
   aspect-ratio: 1;
   background: var(--background);
   clip-path: polygon(50% 0,79% 90%,2% 35%,98% 35%,21% 90%); 
@@ -102,7 +102,7 @@ section > header > h2 {
 }
 
 .star-icon.selected{
-  width: 17px;  
+  width: 18px;  
   aspect-ratio: 1;
   background: var(--theme);
   clip-path: polygon(50% 0,79% 90%,2% 35%,98% 35%,21% 90%); 

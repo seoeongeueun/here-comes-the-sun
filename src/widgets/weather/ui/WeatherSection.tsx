@@ -156,11 +156,11 @@ export function WeatherSection() {
           )}
         </header>
         {clothingAdvice.options.length > 0 && (
-          <ul className="h-30 flex flex-row items-center justify-start w-fit flex-wrap bg-white rounded-sm">
+          <ul className="bg-white rounded-sm flex flex-row items-center justify-start w-full flex-wrap ">
             {clothingAdvice.options.map((advice, index) => (
               <li
                 key={index}
-                className="text-xs px-6 py-2 h-full flex flex-col items-center justify-evenly"
+                className="h-30 text-xs flex flex-col items-center justify-evenly basis-1/3 md:basis-1/4 lg:basis-1/6"
               >
                 <img
                   src={`/icon/${advice}.png`}
