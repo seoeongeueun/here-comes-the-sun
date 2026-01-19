@@ -34,7 +34,7 @@ export function SearchBar() {
   };
 
   return (
-    <div className="flex flex-col relative">
+    <section className="flex flex-col relative">
       <form
         onSubmit={handleSubmit}
         className="flex items-center justify-center gap-2 rounded-sm bg-white text-black text-xs p-1"
@@ -46,7 +46,7 @@ export function SearchBar() {
           id="address-search"
           type="search"
           name="address"
-          placeholder="주소를 입력하세요"
+          placeholder="날씨를 확인할 주소를 입력하세요 (예: 서울 강남구 역삼동)"
           onChange={(e) => setInput(e.target.value)}
           value={input}
           className="placeholder:text-background flex-1 focus:outline-theme p-1"
@@ -89,6 +89,6 @@ export function SearchBar() {
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }

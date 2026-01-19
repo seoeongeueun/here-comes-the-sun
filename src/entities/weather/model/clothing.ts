@@ -23,13 +23,13 @@ export type CLOTHING_OPTIONS =
 // 최고 기온 기준
 export const CLOTHING_ADVICE: Record<number, CLOTHING_OPTIONS[]> = {
   "-1": ["paddedjacket", "pants", "sweater", "gloves", "hat", "earmuff"], // ~-1도
-  4: ["paddedjacket", "gloves", "pants"],
+  4: ["paddedjacket", "sweater", "pants", "gloves"],
   8: ["heavyjacket", "sweater", "pants"],
-  11: ["coat", "jacket", "pants"],
-  16: ["cardigan", "hoodie", "pants"],
+  11: ["coat", "hoodie", "jacket", "pants"],
+  16: ["cardigan", "hoodie", "pants", "jacket"],
   22: ["shirt", "pants"],
-  27: ["skirt", "tshirt", "shorts"],
-  999: ["dress", "slippers", "tshirt", "sunglasses", "shorts"], // 27도~
+  27: ["skirt", "tshirt", "shorts", "dress"],
+  999: ["tshirt", "skirt", "shorts", "slippers", "sunglasses"], // 27도~
 };
 
 export const SPECIAL_CLOTHING: Record<string, CLOTHING_OPTIONS[]> = {
