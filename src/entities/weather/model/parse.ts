@@ -1,4 +1,4 @@
-import type { OpenMeteoHourly } from "./types";
+import type { OpenMeteoHourly, OpenMeteoDaily } from "./types";
 
 type HourlyPoint = {
   time: string; // "2026-01-19T13:00"
@@ -53,4 +53,19 @@ export function getHourlyRangeByDate(
   }
 
   return { start, end: start === -1 ? 0 : times.length };
+}
+
+// 특정 날짜의 최저/최고 기온 반환
+export function parseDailyMinMax(
+  daily: OpenMeteoDaily,
+  date: string, // "2026-01-19"
+): { min: number | null; max: number | null } {
+  const times = daily.time ?? [];
+  const i = times.indexOf(date);
+  if (i === -1) return { min: null, max: null };
+
+  const min = daily.temperature_2m_min?.[i] ?? null;
+  const max = daily.temperature_2m_max?.[i] ?? null;
+
+  return { min, max };
 }
