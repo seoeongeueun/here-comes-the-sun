@@ -123,7 +123,7 @@ export function WeatherSection() {
                   <figure
                     key={point.time}
                     id={`hourly-weather-${point.time}`}
-                    className="bg-white rounded-sm flex flex-col items-center justify-center p-2 gap-2 aspect-square min-w-20"
+                    className="bg-white rounded-sm flex flex-col items-center justify-center p-2 gap-2 aspect-square min-w-20 h-30"
                   >
                     <time className="text-black text-xxs" dateTime={point.time}>
                       {point.time.slice(11, 16)}
@@ -156,11 +156,11 @@ export function WeatherSection() {
           )}
         </header>
         {clothingAdvice.options.length > 0 && (
-          <ul className="flex flex-row items-center justify-start w-fit p-1 flex-wrap bg-white rounded-sm">
+          <ul className="h-30 flex flex-row items-center justify-start w-fit flex-wrap bg-white rounded-sm">
             {clothingAdvice.options.map((advice, index) => (
               <li
                 key={index}
-                className="text-xs px-6 py-2 flex flex-col items-center justify-center gap-1"
+                className="text-xs px-6 py-2 h-full flex flex-col items-center justify-evenly"
               >
                 <img
                   src={`/icon/${advice}.png`}
