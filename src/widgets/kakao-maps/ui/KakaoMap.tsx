@@ -187,12 +187,15 @@ export function KakaoMap() {
   }, [currentLocation, setCurrentLocation]);
 
   useEffect(() => {
-    if (!tmpSelectedLocation || !geocoderRef.current) {
+    if (!tmpSelectedLocation) {
+      setSearchInProgress(false);
+      return;
+    }
+
+    if (!geocoderRef.current) {
       setSearchInProgress(false);
       clearLocation();
-      if (tmpSelectedLocation && !geocoderRef.current) {
-        show("지도를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
-      }
+      show("지도를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
       return;
     }
 
@@ -203,6 +206,7 @@ export function KakaoMap() {
       .then((location) => {
         clearLocation();
 
+        console.log("Address converted to coordinates:", location);
         selectLocation(location);
         setSearchInProgress(false);
       })
@@ -211,6 +215,7 @@ export function KakaoMap() {
         show(
           "입력한 주소의 위치를 찾을 수 없습니다. 주소를 다시 확인해주세요.",
         );
+        setSearchInProgress(false);
       });
   }, [tmpSelectedLocation]);
 

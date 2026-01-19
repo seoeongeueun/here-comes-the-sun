@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDistrictsIndex } from "@/features/search-address/model";
 import { suggestAddress } from "@/features/suggest-address/model";
 import { useSelectLocationStore } from "@/features/select-location";
@@ -30,6 +30,7 @@ export function SearchBar() {
     tmpSelectLocation(input.trim()); // 입력한 주소를 임시 선택 장소로 설정
     setSearchInProgress(true); // 검색 중 상태로 설정
     setIsFocused(false);
+    setInput("");
   };
 
   return (

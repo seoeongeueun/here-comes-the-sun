@@ -11,7 +11,11 @@ export function WeatherSection() {
   // 현재 위치의 날씨 데이터
   const currentLocation = useCurrentLocationStore((s) => s.currentLocation);
 
-  const currentLocationWeather = useQuery({
+  const {
+    data: currentLocationWeather,
+    isLoading,
+    isError,
+  } = useQuery({
     ...weatherQueries.byLatLng({
       lat: currentLocation?.lat ?? NaN,
       lng: currentLocation?.lng ?? NaN,
@@ -20,17 +24,14 @@ export function WeatherSection() {
   });
 
   const hourlyToday = useMemo(() => {
-    const hourly = currentLocationWeather.data?.hourly;
+    const hourly = currentLocationWeather?.hourly;
     if (!hourly) return [];
 
-    const todayDate = currentLocationWeather.data?.current?.time.slice(0, 10);
+    const todayDate = currentLocationWeather?.current?.time.slice(0, 10);
     if (!todayDate) return [];
 
     return parseHourlyByDate(hourly, todayDate);
-  }, [
-    currentLocationWeather.data?.current?.time,
-    currentLocationWeather.data?.hourly,
-  ]);
+  }, [currentLocationWeather?.hourly, currentLocationWeather?.current?.time]);
 
   useEffect(() => {
     //현재 시간은 어느 hourly 데이터와 매칭되는지 확인
@@ -66,31 +67,45 @@ export function WeatherSection() {
         id="hourly-chart"
         className="w-full h-fit text-center overflow-x-auto flex flex-row gap-3"
       >
-        {hourlyToday.length !== 0 ? (
-          hourlyToday.map((point) => (
-            <figure
-              key={point.time}
-              id={`hourly-weather-${point.time}`}
-              className="bg-white rounded-sm flex flex-col items-center justify-center p-2 gap-2 aspect-square min-w-20"
-            >
-              <time className="text-background text-xxs" dateTime={point.time}>
-                {point.time.slice(11, 16)}
-              </time>
-              <span className="text-xl" role="img" aria-label="날씨 상태">
-                {convertWeatherCodeToEmoji(point.weatherCode)}
-              </span>
-              <data
-                className="text-s text-error"
-                value={point.temperature ?? 0}
-              >
-                {point.temperature != null
-                  ? `${Math.round(point.temperature)}°C`
-                  : "N/A"}
-              </data>
-            </figure>
-          ))
-        ) : (
-          <p className="w-full">날씨 정보가 없습니다</p>
+        {isLoading && (
+          <p className="text-black text-sm w-full">
+            날씨 정보를 불러오는 중...
+          </p>
+        )}
+        {isError && (
+          <p className="text-black text-sm w-full">
+            날씨 정보를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.
+          </p>
+        )}
+        {!isLoading && !isError && (
+          <>
+            {hourlyToday.length !== 0 ? (
+              hourlyToday.map((point) => (
+                <figure
+                  key={point.time}
+                  id={`hourly-weather-${point.time}`}
+                  className="bg-white rounded-sm flex flex-col items-center justify-center p-2 gap-2 aspect-square min-w-20"
+                >
+                  <time className="text-black text-xxs" dateTime={point.time}>
+                    {point.time.slice(11, 16)}
+                  </time>
+                  <span className="text-xl" role="img" aria-label="날씨 상태">
+                    {convertWeatherCodeToEmoji(point.weatherCode)}
+                  </span>
+                  <data
+                    className="text-s text-error"
+                    value={point.temperature ?? 0}
+                  >
+                    {point.temperature != null
+                      ? `${Math.round(point.temperature)}°C`
+                      : "N/A"}
+                  </data>
+                </figure>
+              ))
+            ) : (
+              <p className="w-full">해당 장소의 정보가 제공되지 않습니다.</p>
+            )}
+          </>
         )}
       </article>
     </section>
