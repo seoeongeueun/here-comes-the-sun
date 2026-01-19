@@ -14,6 +14,8 @@ import { useCurrentLocationStore } from "@/features/current-location";
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { weatherQueries, convertWeatherCodeToEmoji } from "@/entities/weather";
 import { useToastStore } from "@/shared/ui";
+import { useFavoriteCityStore } from "@/features/favorite-city";
+import type { City } from "@/entities/city";
 import "../styles.css";
 
 export function KakaoMap() {
@@ -34,6 +36,7 @@ export function KakaoMap() {
   const setSearchInProgress = useSelectLocationStore(
     (s) => s.setSearchInProgress,
   );
+  const toggleFavorite = useFavoriteCityStore((s) => s.toggleFavorite);
 
   const [showMapError, setShowMapError] = useState(false); // 지도 로드 오류 상태
 
@@ -142,6 +145,10 @@ export function KakaoMap() {
         // 마커 관리를 위한 overlayManager 생성
         const manager = new OverlayManager(map);
         managerRef.current = manager;
+
+        manager.setHandlers({
+          onToggleFavorite: (city: City) => toggleFavorite(city),
+        });
 
         // 모든 마커 생성
         MAJOR_CITIES.forEach((city) => {

@@ -1,5 +1,6 @@
 import type { City } from "@/entities/city";
 import { fillCityMarkerContent } from "./fillCityMarkerContent";
+import { makeUniqueCityId } from "@/entities/city";
 
 interface OverlayItem {
   overlay: kakao.maps.CustomOverlay;
@@ -11,6 +12,7 @@ export class OverlayManager {
   private overlays: Map<string, OverlayItem> = new Map();
   private activeOverlay: OverlayItem | null = null;
   private currentLocationDot: kakao.maps.CustomOverlay | null = null;
+  private onToggleFavorite?: (city: City) => void;
   private map: kakao.maps.Map;
 
   constructor(map: kakao.maps.Map) {
@@ -24,8 +26,31 @@ export class OverlayManager {
     wrapper.innerHTML = htmlString;
     const content = wrapper.firstElementChild as HTMLElement;
 
+    if (city.id === "selected-location") {
+      const favoriteButton = content.querySelector("#favorite-button");
+      //선택된 위치 마커는 즐겨찾기 버튼을 노출
+      if (favoriteButton) {
+        favoriteButton.classList.remove("hidden");
+      }
+    }
+
     // 마커 클릭 이벤트 -> 클릭된 마커를 가장 위로 올린다
-    content.addEventListener("click", () => {
+    content.addEventListener("click", (e: Event) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      const target = e.target as HTMLElement;
+
+      // 클릭된 영역이 별 버튼이면 즐겨찾기 토글 이벤트 처리
+      const btn = target.closest(
+        "[data-action='toggle-favorite']",
+      ) as HTMLElement | null;
+      if (btn) {
+        this.onToggleFavorite?.(city);
+        btn.classList.toggle("selected");
+        return;
+      }
+
       this.setActive(city.id);
     });
 
@@ -34,6 +59,7 @@ export class OverlayManager {
       content: content,
       yAnchor: 1,
       zIndex: 10,
+      clickable: true,
     });
 
     overlay.setMap(this.map);
@@ -153,7 +179,7 @@ export class OverlayManager {
       // 로딩 애니메이션 제거
       emojiElement.classList.remove(
         "animate-[pulse_1.6s_ease-in-out_infinite]",
-        "bg-background"
+        "bg-background",
       );
     }
 
@@ -163,10 +189,15 @@ export class OverlayManager {
       if (tempElement) {
         tempElement.classList.remove(
           "animate-[pulse_1.6s_ease-in-out_infinite]",
-          "bg-background"
+          "bg-background",
         );
         tempElement.textContent = `${Math.round(temp)}°C`;
       }
     }
+  }
+
+  // 즐겨찾기 토글 핸들러 설정
+  setHandlers(handlers: { onToggleFavorite?: (city: City) => void }) {
+    this.onToggleFavorite = handlers.onToggleFavorite;
   }
 }

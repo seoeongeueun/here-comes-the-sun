@@ -28,6 +28,7 @@ declare global {
           content: string | HTMLElement;
           yAnchor?: number;
           zIndex?: number;
+          clickable?: boolean;
         });
         setMap(map: Map | null): void;
         getContent(): string | HTMLElement;
