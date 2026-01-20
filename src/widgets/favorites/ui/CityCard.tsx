@@ -5,6 +5,7 @@ import { useFavoriteCityStore } from "@/features/favorite-city";
 import { useQuery } from "@tanstack/react-query";
 import { weatherQueries, convertWeatherCodeToEmoji } from "@/entities/weather";
 import { parseDailyMinMax } from "@/entities/weather";
+import { useNavigate } from "react-router-dom";
 
 export function CityCard(city: Favorite) {
   const selectLocation = useSelectLocationStore(
@@ -14,10 +15,13 @@ export function CityCard(city: Favorite) {
   const clearLocation = useSelectLocationStore((state) => state.clearLocation);
 
   const handleFavoriteClick = (e: React.PointerEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     e.stopPropagation(); //즐겨찾기 버튼 클릭시 카드 클릭 이벤트가 발생하는 것을 방지
     removeFavorite(city.id);
     clearLocation();
   };
+
+  const navigate = useNavigate();
 
   const {
     data: weatherData,
@@ -39,6 +43,11 @@ export function CityCard(city: Favorite) {
     return parseDailyMinMax(dailyData, todayDate);
   }, [dailyData, currentTime]);
 
+  const handleCardClick = () => {
+    selectLocation(city);
+    navigate(`/info/${city.id}`);
+  };
+
   if (isError) {
     return (
       <div className="h-30 cursor-pointer text-xs p-2 bg-white rounded-sm flex items-center justify-center text-background">
@@ -50,7 +59,7 @@ export function CityCard(city: Favorite) {
   return (
     <div
       key={city.id}
-      onClick={() => selectLocation(city)}
+      onClick={handleCardClick}
       className="h-30 cursor-zoom-in p-2 bg-white rounded-sm flex flex-col items-center justify-between"
     >
       <button
