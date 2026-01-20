@@ -13,7 +13,7 @@ export function FavoritesSection() {
       </header>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
         {favoriteCities.length === 0 ? (
-          <div className="h-30 flex flex-col justify-center items-center text-secondary text-sm w-full text-center">
+          <div className="col-span-full h-30 flex flex-col justify-center items-center text-secondary text-sm w-full text-center">
             <span>즐겨찾기한 주소가 없습니다</span>
             <span className="text-s">
               주소를 검색해서 즐겨찾기에 추가해보세요

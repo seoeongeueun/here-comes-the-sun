@@ -150,7 +150,9 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
                   </figure>
                 ))
               ) : (
-                <p className="w-full">해당 장소의 정보가 제공되지 않습니다.</p>
+                <p className="w-full h-30 text-secondary text-center flex items-center justify-center">
+                  해당 장소의 정보가 제공되지 않습니다
+                </p>
               )}
             </>
           )}
@@ -186,12 +188,11 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
             ))}
           </ul>
         )}
-        {(!isLoading && clothingAdvice.options.length === 0) ||
-          (isError && (
-            <div className="h-30 text-secondary text-center w-full flex items-center justify-center">
-              해당 장소의 옷차림 정보를 제공할 수 없습니다.
-            </div>
-          ))}
+        {(clothingAdvice.options.length === 0 || isError) && (
+          <div className="h-30 text-secondary text-center w-full flex items-center justify-center">
+            해당 장소의 옷차림 정보를 제공할 수 없습니다
+          </div>
+        )}
       </section>
     </div>
   );
