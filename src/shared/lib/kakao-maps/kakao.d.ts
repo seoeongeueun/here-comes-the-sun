@@ -16,6 +16,11 @@ declare global {
           container: HTMLElement,
           options: { center: LatLng; level?: number },
         );
+
+        relayout(): void;
+
+        getCenter(): LatLng;
+        setCenter(latlng: LatLng): void;
       }
 
       class Marker {

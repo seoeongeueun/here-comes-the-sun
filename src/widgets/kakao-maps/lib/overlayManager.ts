@@ -89,8 +89,6 @@ export class OverlayManager {
 
     currentItem.overlay.setZIndex(50);
     this.activeOverlay = currentItem;
-
-    console.log(currentItem.content.classList);
   }
 
   // 특정 마커 하나만 숨기기

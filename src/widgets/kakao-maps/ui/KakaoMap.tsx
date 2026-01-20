@@ -22,6 +22,7 @@ export function KakaoMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const managerRef = useRef<OverlayManager | null>(null);
   const geocoderRef = useRef<kakao.maps.services.Geocoder | null>(null);
+  const mapInstanceRef = useRef<kakao.maps.Map | null>(null);
   const hideTimerRef = useRef<number | null>(null);
   const selectedLocation = useSelectLocationStore((s) => s.selectedLocation);
   const selectLocation = useSelectLocationStore((s) => s.selectLocation);
@@ -135,6 +136,7 @@ export function KakaoMap() {
           level: DEFAULT_LEVEL,
         });
 
+        mapInstanceRef.current = map;
         console.log("Kakao Map initialized", map);
 
         setShowMapError(false);
@@ -185,6 +187,37 @@ export function KakaoMap() {
       if (hideTimerRef.current !== null) {
         clearTimeout(hideTimerRef.current);
       }
+    };
+  }, []);
+
+  // 컨테이너 크기 변경시 지도 레이아웃 재계산 (카카오톡 맵의 권장 방식)
+  useEffect(() => {
+    const el = mapRef.current;
+    if (!el) return;
+
+    let rafId: number | null = null;
+
+    const observer = new ResizeObserver(() => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+
+      rafId = requestAnimationFrame(() => {
+        const map = mapInstanceRef.current;
+        if (!map) return;
+
+        // 컨테이너 크기 변경 후 relayout
+        map.relayout();
+
+        // 일부 케이스에서 오버레이 정렬 안정화용
+        const center = map.getCenter();
+        map.setCenter(center);
+      });
+    });
+
+    observer.observe(el);
+
+    return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      observer.disconnect();
     };
   }, []);
 
@@ -286,6 +319,7 @@ export function KakaoMap() {
       // 주소가 없으면 선택된 장소 완전히 삭제하고 기본 마커 표시
       manager.deleteOverlay("selected-location");
       manager.showAll();
+      console.log("디폴트 마커 다시 노출");
     }
   }, [selectedLocation, selectedLocationWeather.data]);
 
