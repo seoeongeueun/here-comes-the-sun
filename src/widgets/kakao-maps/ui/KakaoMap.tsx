@@ -43,6 +43,7 @@ export function KakaoMap() {
   const isFavorite = useFavoriteCityStore((s) => s.isFavorite);
 
   const [showMapError, setShowMapError] = useState(false); // 지도 로드 오류 상태
+  const [isGeocoderReady, setIsGeocoderReady] = useState(false); // geocoder 준비 상태
 
   // 주요 도시들의 날씨 데이터
   const majorCitiesWeather = useQueries({
@@ -174,10 +175,12 @@ export function KakaoMap() {
 
         // 장소 분석을 위한 geocoder
         geocoderRef.current = new kakao.maps.services.Geocoder();
+        setIsGeocoderReady(true); // geocoder 준비 완료 표시
       })
       .catch((e) => {
         console.error("Failed to load Kakao Maps:", e);
         setShowMapError(true);
+        setIsGeocoderReady(false);
       });
 
     return () => {
@@ -223,10 +226,17 @@ export function KakaoMap() {
 
   useEffect(() => {
     //현재 좌표는 가져왔지만 아직 주소 정보가 없는 경우에만 변환을 시도
+    console.log(
+      "Checking current location address:",
+      currentLocation,
+      "isGeocoderReady:",
+      isGeocoderReady,
+    );
     if (
       currentLocation?.lng &&
       currentLocation?.lat &&
-      currentLocation.sido.length === 0
+      currentLocation.sido.length === 0 &&
+      isGeocoderReady
     ) {
       if (!geocoderRef.current) return;
 
@@ -244,7 +254,7 @@ export function KakaoMap() {
         }
       });
     }
-  }, [currentLocation, setCurrentLocation]);
+  }, [currentLocation, setCurrentLocation, isGeocoderReady]);
 
   useEffect(() => {
     if (!tmpSelectedLocation) {

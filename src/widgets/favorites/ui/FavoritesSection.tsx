@@ -6,7 +6,7 @@ export function FavoritesSection() {
   const favoriteCities = useFavoriteCityStore((state) => state.favorites);
 
   return (
-    <section className="w-full h-fit">
+    <section className="w-full h-fit pb-4">
       <header>
         <h2>내 장소</h2>
         <span className="text-xs">{favoriteCities.length}/6</span>
