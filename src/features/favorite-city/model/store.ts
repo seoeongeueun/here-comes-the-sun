@@ -14,6 +14,7 @@ type FavoriteCityStore = {
   removeFavorite: (cityId: string) => void;
   toggleFavorite: (city: City) => void;
   updateNickname: (cityId: string, nickname: string) => void;
+  getFavorite: (cityId: string) => Favorite | null;
   clearFavorites: () => void;
 };
 
@@ -50,6 +51,10 @@ export const useFavoriteCityStore = create<FavoriteCityStore>()(
       },
 
       clearFavorites: () => set({ favorites: [] }),
+
+      getFavorite: (cityId) => {
+        return get().favorites.find((c) => c.id === cityId)!;
+      },
 
       updateNickname: (cityId, nickname) => {
         set((state) => ({
