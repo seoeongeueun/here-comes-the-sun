@@ -2,6 +2,7 @@
 let loadPromise: Promise<void> | null = null;
 
 export function loadKakaoMaps() {
+  if (window.kakao?.maps) return Promise.resolve(); //이미 로드된 경우
   if (loadPromise) return loadPromise;
 
   loadPromise = new Promise((resolve, reject) => {
@@ -15,7 +16,10 @@ export function loadKakaoMaps() {
       window.kakao.maps.load(() => resolve());
     };
 
-    script.onerror = reject;
+    script.onerror = (e) => {
+      loadPromise = null; // 다음 호출에서 재시도 가능
+      reject(e);
+    };
     document.head.appendChild(script);
   });
 

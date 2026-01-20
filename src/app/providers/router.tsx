@@ -8,7 +8,7 @@ export function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path={routes.home} element={<MainPage />} />
-        <Route path={routes.infoDetailPattern} element={<InfoPage />} />
+        <Route path={routes.info} element={<InfoPage />} />{" "}
       </Routes>
     </BrowserRouter>
   );

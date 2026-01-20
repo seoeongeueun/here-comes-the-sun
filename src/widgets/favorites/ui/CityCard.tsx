@@ -5,7 +5,8 @@ import { useFavoriteCityStore } from "@/features/favorite-city";
 import { useQuery } from "@tanstack/react-query";
 import { weatherQueries, convertWeatherCodeToEmoji } from "@/entities/weather";
 import { parseDailyMinMax } from "@/entities/weather";
-import { useNavigate } from "react-router-dom";
+import { createSearchParams, useNavigate } from "react-router-dom";
+import { routes } from "@/shared/config/routes";
 
 export function CityCard(city: Favorite) {
   const selectLocation = useSelectLocationStore(
@@ -45,7 +46,17 @@ export function CityCard(city: Favorite) {
 
   const handleCardClick = () => {
     selectLocation(city);
-    navigate(`/info/${city.id}`);
+
+    navigate({
+      pathname: routes.info,
+      search: createSearchParams({
+        lat: String(city.lat),
+        lng: String(city.lng),
+        sido: city.sido,
+        sigungu: city.sigungu ?? "",
+        dong: city.dong ?? "",
+      }).toString(),
+    });
   };
 
   if (isError) {
