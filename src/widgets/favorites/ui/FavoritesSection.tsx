@@ -24,9 +24,9 @@ export function FavoritesSection() {
       <div className="flex flex-row gap-4 w-full">
         {favoriteCities.length === 0 ? (
           <div className="h-30 flex flex-col justify-center items-center text-secondary text-sm w-full text-center">
-            <span>즐겨찾기한 주소가 없습니다.</span>
+            <span>즐겨찾기한 주소가 없습니다</span>
             <span className="text-s">
-              주소를 검색해서 즐겨찾기에 추가해보세요.
+              주소를 검색해서 즐겨찾기에 추가해보세요
             </span>
           </div>
         ) : (

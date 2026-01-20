@@ -44,7 +44,7 @@ export function addressToCoordAsync(
         lng: Number(result[0].x),
         sido: address.region_1depth_name,
         sigungu: address.region_2depth_name,
-        dong: address.region_3depth_name,
+        dong: address.region_3depth_name || address.region_3depth_h_name,
       });
     });
   });
