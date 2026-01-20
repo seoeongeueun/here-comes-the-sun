@@ -1,6 +1,6 @@
 import { KakaoMap } from "@/widgets/kakao-maps";
 import { Dashboard } from "@/widgets/dashboard";
-import { usePrefetchCitiesWeather } from "@/features/prefetch-cities-weather";
+//import { usePrefetchCitiesWeather } from "@/features/prefetch-cities-weather";
 import { Header } from "@/widgets/dashboard/ui/Header";
 
 export function MainPage() {

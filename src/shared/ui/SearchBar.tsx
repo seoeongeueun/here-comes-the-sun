@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useDistrictsIndex } from "@/features/search-address/model";
 import { suggestAddress } from "@/features/suggest-address/model";
 import { useSelectLocationStore } from "@/features/select-location";
