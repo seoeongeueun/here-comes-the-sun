@@ -7,7 +7,7 @@ import {
   getCurrentPositionAsync,
   addressToCoordAsync,
 } from "@/shared/lib";
-import { MAJOR_CITIES } from "@/entities/city";
+import { MAJOR_CITIES, makeUniqueCityId } from "@/entities/city";
 import { OverlayManager } from "../lib/overlayManager";
 import { useSelectLocationStore } from "@/features/select-location";
 import { useCurrentLocationStore } from "@/features/current-location";
@@ -37,6 +37,7 @@ export function KakaoMap() {
     (s) => s.setSearchInProgress,
   );
   const toggleFavorite = useFavoriteCityStore((s) => s.toggleFavorite);
+  const isFavorite = useFavoriteCityStore((s) => s.isFavorite);
 
   const [showMapError, setShowMapError] = useState(false); // 지도 로드 오류 상태
 
@@ -239,14 +240,17 @@ export function KakaoMap() {
     ) {
       // 주소가 있으면 기본 마커 숨기고 선택된 장소만 표시
       manager.hideAll();
-      manager.createOverlay({
-        id: "selected-location",
-        lat: selectedLocation.lat,
-        lng: selectedLocation.lng,
-        sido: selectedLocation.sido,
-        sigungu: selectedLocation.sigungu,
-        dong: selectedLocation.dong,
-      });
+      manager.createOverlay(
+        {
+          id: "selected-location",
+          lat: selectedLocation.lat,
+          lng: selectedLocation.lng,
+          sido: selectedLocation.sido,
+          sigungu: selectedLocation.sigungu,
+          dong: selectedLocation.dong,
+        },
+        isFavorite(makeUniqueCityId(selectedLocation)),
+      ); // 즐겨찾기 여부 전달
 
       // 선택된 장소의 날씨 데이터가 있으면 마커 업데이트
       if (selectedLocationWeather.data?.code != null) {

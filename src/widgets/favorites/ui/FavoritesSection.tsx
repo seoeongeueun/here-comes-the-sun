@@ -23,7 +23,7 @@ export function FavoritesSection() {
       </header>
       <div className="flex flex-row gap-4 w-full">
         {favoriteCities.length === 0 ? (
-          <div className="h-30 flex flex-col justify-center items-center text-black text-sm w-full text-center">
+          <div className="h-30 flex flex-col justify-center items-center text-secondary text-sm w-full text-center">
             <span>즐겨찾기한 주소가 없습니다.</span>
             <span className="text-s">
               주소를 검색해서 즐겨찾기에 추가해보세요.
@@ -31,10 +31,10 @@ export function FavoritesSection() {
           </div>
         ) : (
           favoriteCities.map((city: City) => (
-            <button
+            <div
               key={city.id}
               onClick={() => selectLocation(city)}
-              className="h-30  basis-1/3 lg:basis-1/6 p-2 bg-white rounded-sm flex flex-col items-center justify-between"
+              className="h-30 cursor-pointer basis-1/3 lg:basis-1/6 p-2 bg-white rounded-sm flex flex-col items-center justify-between"
             >
               <button
                 className="star-icon selected ml-auto p-2"
@@ -61,7 +61,7 @@ export function FavoritesSection() {
                   {city.sigungu ?? ""} {city.dong ?? ""}
                 </span>
               </div>
-            </button>
+            </div>
           ))
         )}
       </div>

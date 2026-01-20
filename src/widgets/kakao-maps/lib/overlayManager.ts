@@ -20,7 +20,7 @@ export class OverlayManager {
   }
 
   //마커 생성 및 오버레이 추가
-  createOverlay(city: City): kakao.maps.CustomOverlay {
+  createOverlay(city: City, isFavorite?: boolean): kakao.maps.CustomOverlay {
     const htmlString = fillCityMarkerContent(city);
     const wrapper = document.createElement("div");
     wrapper.innerHTML = htmlString;
@@ -31,6 +31,7 @@ export class OverlayManager {
       //선택된 위치 마커는 즐겨찾기 버튼을 노출
       if (favoriteButton) {
         favoriteButton.classList.remove("hidden");
+        if (isFavorite) favoriteButton.classList.add("selected");
       }
     }
 
