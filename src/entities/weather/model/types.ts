@@ -39,3 +39,6 @@ export type OpenMeteoForecastResponse = {
 //open meteo에서 받은 hourly 데이터를 파싱할 것이기 때문에
 export type OpenMeteoHourly = NonNullable<OpenMeteoForecastResponse["hourly"]>;
 export type OpenMeteoDaily = NonNullable<OpenMeteoForecastResponse["daily"]>;
+export type OpenMeteoCurrent = NonNullable<
+  OpenMeteoForecastResponse["current"]
+>;

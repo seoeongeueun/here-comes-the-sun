@@ -50,7 +50,7 @@ export function addressToCoordAsync(
   });
 }
 
-//브라우저 geocoder API를 이용해 현재 위치 좌표를 가져오는 함수
+//브라우저 geolocation API를 이용해 현재 위치 좌표를 가져오는 함수
 export function getCurrentPositionAsync(): Promise<{
   lat: number;
   lng: number;
