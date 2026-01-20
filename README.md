@@ -28,8 +28,55 @@ npm run preview
 
 ### 지도 기반 탐색
 
-![cities](./public/images/citiesWeather.png)
+![cities](./public/images/citiesweather.png)
+
 좀 더 친숙한 시각적 인터페이스로 지역을 탐색할 수 있도록 Kakao Map API를 연동했습니다. 유저는 지도에서 드래그/줌/클릭을 통해 자유롭게 위치를 선택하고, 선택한 지점의 날씨를 즉시 확인할 수 있습니다.
+
+한 눈에 다양한 지역의 날씨를 확인할 수 있도록 주요 도시 목록을 상수로 관리하고, 맵 로드시 날씨를 가져오고 마커를 표시합니다. 유저가 다른 지역을 클릭하면 디폴트 마커는 숨김처리하고, 주소가 존재하지 않는 지역을 클릭시 (예시: 바다) 다시 디폴트 마커를 노출합니다.
+
+```
+// 주요 도시들의 날씨 데이터
+  const majorCitiesWeather = useQueries({
+    queries: MAJOR_CITIES.map((city) =>
+      weatherQueries.nowByLatLng({ lat: city.lat, lng: city.lng }),
+    ),
+  });
+
+  // 모든 마커 생성
+        MAJOR_CITIES.forEach((city) => {
+          manager.createOverlay(city);
+        });
+
+  ...
+
+  // 장소가 선택되면 디폴트 도시 마커는 전체 숨김 처리
+  useEffect(() => {
+    if (!managerRef.current) return;
+
+    const manager = managerRef.current;
+
+    if (
+      selectedLocation &&
+      selectedLocation.sido &&
+      selectedLocation.sido.length > 0
+    ) {
+      // 주소가 있으면 기본 마커 숨기고 선택된 장소만 표시
+      manager.hideAll();
+      manager.createOverlay(
+        {
+          id: "selected-location",
+          lat: selectedLocation.lat,
+          lng: selectedLocation.lng,
+          sido: selectedLocation.sido,
+          sigungu: selectedLocation.sigungu,
+          dong: selectedLocation.dong,
+        },
+        isFavorite(makeUniqueCityId(selectedLocation)),
+      ); // 즐겨찾기 여부 전달
+
+  ...
+
+```
 
 또한 마커 overlay 내부에서 다음과 같은 상호작용을 제공합니다.
 
