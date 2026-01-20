@@ -107,14 +107,13 @@ export function WeatherSection() {
           className="w-full h-fit text-center overflow-x-auto flex flex-row gap-3"
         >
           {isLoading && (
-            <p className="text-black text-sm w-full py-4">
-              날씨 정보를 불러오는 중...
-            </p>
+            <div className="h-30 rounded-sm bg-gray-300 animate-[pulse_1.6s_ease-in-out_infinite] text-sm w-full"></div>
           )}
-          {isError && (
-            <p className="text-black text-sm w-full py-4">
-              날씨 정보를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.
-            </p>
+          {isError && !isLoading && (
+            <div className="h-30 flex flex-col justify-center items-center text-secondary text-sm w-full text-center">
+              <span>날씨 정보를 불러올 수 없습니다 </span>
+              <span className="text-s">잠시 후 다시 시도해주세요</span>
+            </div>
           )}
           {!isLoading && !isError && (
             <>
@@ -155,7 +154,10 @@ export function WeatherSection() {
             </span>
           )}
         </header>
-        {clothingAdvice.options.length > 0 && (
+        {isLoading && (
+          <div className="h-30 rounded-sm bg-gray-300 animate-[pulse_1.6s_ease-in-out_infinite] text-sm w-full"></div>
+        )}
+        {!isLoading && clothingAdvice.options.length > 0 && (
           <ul className="bg-white rounded-sm flex flex-row items-center justify-start w-full flex-wrap ">
             {clothingAdvice.options.map((advice, index) => (
               <li
@@ -172,6 +174,12 @@ export function WeatherSection() {
             ))}
           </ul>
         )}
+        {(!isLoading && clothingAdvice.options.length === 0) ||
+          (isError && (
+            <div className="h-30 text-secondary text-center w-full flex items-center justify-center">
+              해당 장소의 옷차림 정보를 제공할 수 없습니다.
+            </div>
+          ))}
       </section>
     </div>
   );
