@@ -1,10 +1,12 @@
-import type { City } from "@/entities/city";
+import type { Favorite } from "@/entities/favorite";
+import { useMemo } from "react";
 import { useSelectLocationStore } from "@/features/select-location";
 import { useFavoriteCityStore } from "@/features/favorite-city";
 import { useQuery } from "@tanstack/react-query";
 import { weatherQueries, convertWeatherCodeToEmoji } from "@/entities/weather";
+import { parseDailyMinMax } from "@/entities/weather";
 
-export function CityCard(city: City) {
+export function CityCard(city: Favorite) {
   const selectLocation = useSelectLocationStore(
     (state) => state.selectLocation,
   );
@@ -22,9 +24,20 @@ export function CityCard(city: City) {
     isLoading,
     isError,
   } = useQuery({
-    ...weatherQueries.nowByLatLng({ lat: city.lat, lng: city.lng }),
+    ...weatherQueries.byLatLng({ lat: city.lat, lng: city.lng }),
     enabled: Number.isFinite(city.lat) && Number.isFinite(city.lng),
   });
+
+  const dailyData = weatherData?.daily;
+  const currentTime = weatherData?.current?.time;
+
+  const dailyMinMax = useMemo(() => {
+    if (!dailyData) return { min: null, max: null };
+
+    const todayDate = currentTime?.slice(0, 10);
+    if (!todayDate) return { min: null, max: null };
+    return parseDailyMinMax(dailyData, todayDate);
+  }, [dailyData, currentTime]);
 
   if (isError) {
     return (
@@ -38,37 +51,48 @@ export function CityCard(city: City) {
     <div
       key={city.id}
       onClick={() => selectLocation(city)}
-      className="h-30 cursor-pointer p-2 bg-white rounded-sm flex flex-col items-center justify-between"
+      className="h-30 cursor-zoom-in p-2 bg-white rounded-sm flex flex-col items-center justify-between"
     >
       <button
-        className="star-icon selected ml-auto p-2"
+        className="star-icon selected ml-auto p-2 cursor-pointer"
         onClick={handleFavoriteClick}
         aria-label={`즐겨찾기 ${city.sido} ${city.sigungu ?? ""} ${city.dong ?? ""} 토글`}
       ></button>
       <span
         id="weather-emoji"
-        className={`text-lg h-10 w-10 flex items-center justify-center rounded-sm ${isLoading ? " bg-background animate-[pulse_1.6s_ease-in-out_infinite] transition-colors duration-300" : ""}`}
+        className={`text-lg h-10 min-w-10 flex items-center justify-center rounded-sm ${isLoading ? "bg-background animate-[pulse_1.6s_ease-in-out_infinite] transition-colors duration-300" : ""}`}
         aria-hidden="true"
       >
-        {weatherData && convertWeatherCodeToEmoji(weatherData.code)}
+        {weatherData?.current &&
+          convertWeatherCodeToEmoji(weatherData.current.weather_code)}
       </span>
       <div className="flex flex-col items-center justify-between w-full h-fit gap-0.5 truncate">
         <div className="flex flex-row items-center justify-between w-full gap-1 text-xs">
-          <h3>{city.sido}</h3>
-          <p
+          <h3>{city.nickname || city.sido}</h3>
+          <div
             id="temperature"
-            className={`text-xxs text-orange-500 min-w-4 h-4 rounded-sm ${isLoading ? " bg-background animate-[pulse_1.6s_ease-in-out_infinite] transition-colors duration-300" : ""}`}
+            className={`flex flex-row gap-1 text-xxs text-error min-w-4 h-4 rounded-sm ${isLoading ? " bg-background animate-[pulse_1.6s_ease-in-out_infinite] transition-colors duration-300" : ""}`}
           >
-            {weatherData && weatherData.temp != null
-              ? `${Math.round(weatherData.temp)}°C`
-              : ""}
-          </p>
+            <p>
+              {dailyMinMax.min != null
+                ? `${Math.round(dailyMinMax.min)}°C`
+                : ""}
+            </p>
+            {!isLoading && <p className="text-secondary">/</p>}
+            <p>
+              {dailyMinMax.max != null
+                ? `${Math.round(dailyMinMax.max)}°C`
+                : ""}
+            </p>
+          </div>
         </div>
         <span
           id="city-secondary"
           className="text-xxs truncate w-full text-secondary text-start"
         >
-          {city.sigungu ?? ""} {city.dong ?? ""}
+          {city.nickname
+            ? `${city.sido} ${city.sigungu ?? ""} ${city.dong ?? ""}`.trim()
+            : `${city.sigungu ?? ""} ${city.dong ?? ""}`.trim()}
         </span>
       </div>
     </div>

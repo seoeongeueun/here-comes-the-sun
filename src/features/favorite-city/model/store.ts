@@ -1,17 +1,19 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { City } from "@/entities/city";
+import type { Favorite } from "@/entities/favorite";
 import { makeUniqueCityId } from "@/entities/city";
 
 const MAX_FAVORITES = 6;
 const STORAGE_KEY = "favorites:cities:v1";
 
 type FavoriteCityStore = {
-  favorites: City[];
+  favorites: Favorite[];
   isFavorite: (cityId: string) => boolean;
   addFavorite: (city: City) => void;
   removeFavorite: (cityId: string) => void;
   toggleFavorite: (city: City) => void;
+  updateNickname: (cityId: string, nickname: string) => void;
   clearFavorites: () => void;
 };
 
@@ -25,7 +27,7 @@ export const useFavoriteCityStore = create<FavoriteCityStore>()(
 
       addFavorite: (city) => {
         const id = makeUniqueCityId(city); //주소 기반으로 고유 ID 생성
-        const nextCity: City = { ...city, id };
+        const nextCity: Favorite = { ...city, id, nickname: "" };
 
         set((state) => {
           // 중복 방지: 이미 있으면 맨 앞으로 끌어올리기
@@ -42,13 +44,20 @@ export const useFavoriteCityStore = create<FavoriteCityStore>()(
       },
 
       toggleFavorite: (city) => {
-        console.log("Toggling favorite for city:", city);
         const id = makeUniqueCityId(city);
         if (get().isFavorite(id)) get().removeFavorite(id);
         else get().addFavorite(city);
       },
 
       clearFavorites: () => set({ favorites: [] }),
+
+      updateNickname: (cityId, nickname) => {
+        set((state) => ({
+          favorites: state.favorites.map((c) =>
+            c.id === cityId ? { ...c, nickname } : c,
+          ),
+        }));
+      },
     }),
     {
       name: STORAGE_KEY,

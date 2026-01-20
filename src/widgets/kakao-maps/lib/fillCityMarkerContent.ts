@@ -6,7 +6,7 @@ export function fillCityMarkerContent(city: City) {
       city.sido
     } 날씨 정보">
         ${fillFavoriteMarkerContent(city)}
-        <span id="weather-emoji" class="text-md h-8 w-8 flex items-center justify-center bg-background rounded-sm animate-[pulse_1.6s_ease-in-out_infinite] transition-colors duration-300" aria-hidden="true"></span>    
+        <span id="weather-emoji" class="text-md min-w-8 h-8 flex items-center justify-center bg-background rounded-sm animate-[pulse_1.6s_ease-in-out_infinite] transition-colors duration-300" aria-hidden="true"></span>    
         <div class="flex flex-col items-center justify-between px-1 w-full h-fit gap-0.5 truncate">
             <div class="flex flex-row items-center justify-between w-full gap-1 text-xs">
                 <h3>${city.sido}</h3>

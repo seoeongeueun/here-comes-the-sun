@@ -1,6 +1,5 @@
 import type { City } from "@/entities/city";
 import { fillCityMarkerContent } from "./fillCityMarkerContent";
-import { makeUniqueCityId } from "@/entities/city";
 
 interface OverlayItem {
   overlay: kakao.maps.CustomOverlay;

@@ -1,5 +1,5 @@
 import { useFavoriteCityStore } from "@/features/favorite-city";
-import type { City } from "@/entities/city";
+import type { Favorite } from "@/entities/favorite";
 import { CityCard } from "./CityCard";
 
 export function FavoritesSection() {
@@ -20,7 +20,7 @@ export function FavoritesSection() {
             </span>
           </div>
         ) : (
-          favoriteCities.map((city: City) => (
+          favoriteCities.map((city: Favorite) => (
             <CityCard key={city.id} {...city} />
           ))
         )}
