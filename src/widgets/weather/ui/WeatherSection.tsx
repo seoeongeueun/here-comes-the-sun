@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { weatherQueries } from "@/entities/weather";
 import { useCurrentLocationStore } from "@/features/current-location";
+import { useSelectLocationStore } from "@/features/select-location";
 import { useEffect, useMemo } from "react";
 import {
   parseHourlyByDate,
@@ -10,25 +11,33 @@ import {
   convertClothingToKorean,
 } from "@/entities/weather";
 
-export function WeatherSection() {
+interface WeatherSectionProps {
+  mode?: "current" | "selected";
+}
+
+export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
   // 현재 위치의 날씨 데이터
   const currentLocation = useCurrentLocationStore((s) => s.currentLocation);
+  const selectedLocation = useSelectLocationStore((s) => s.selectedLocation);
+
+  // mode에 따라 사용할 location 결정
+  const location = mode === "selected" ? selectedLocation : currentLocation;
 
   const {
-    data: currentLocationWeather,
+    data: locationWeather,
     isLoading,
     isError,
   } = useQuery({
     ...weatherQueries.byLatLng({
-      lat: currentLocation?.lat ?? NaN,
-      lng: currentLocation?.lng ?? NaN,
+      lat: location?.lat ?? NaN,
+      lng: location?.lng ?? NaN,
     }),
-    enabled: !!currentLocation?.lat && !!currentLocation?.lng,
+    enabled: !!location?.lat && !!location?.lng,
   });
 
-  const hourlyData = currentLocationWeather?.hourly;
-  const dailyData = currentLocationWeather?.daily;
-  const currentTime = currentLocationWeather?.current?.time;
+  const hourlyData = locationWeather?.hourly;
+  const dailyData = locationWeather?.daily;
+  const currentTime = locationWeather?.current?.time;
 
   const hourlyToday = useMemo(() => {
     if (!hourlyData) return [];
@@ -75,12 +84,12 @@ export function WeatherSection() {
   }, [hourlyToday]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <section className="flex w-full h-fit flex-col">
         <header>
           <h2 className="text-white text-sm">
-            {currentLocation && currentLocation.sido?.length > 0
-              ? `${currentLocation.sido} ${currentLocation.sigungu} ${currentLocation.dong}`
+            {location && location.sido?.length > 0
+              ? `${location.sido} ${location.sigungu} ${location.dong}`
               : "Unknown"}{" "}
             의 시간별 날씨
           </h2>
