@@ -95,7 +95,7 @@ export function InfoPage() {
           >
             <input
               type="text"
-              className={`${isEditMode ? "border-secondary" : "border-none focus:outline-none!"} border px-2 w-full focus:border-black rounded-sm text-lg placeholder:text-secondary`}
+              className={`${isEditMode ? "border-secondary" : "border-none focus:outline-none!"} border px-2 w-full focus:border-black rounded-sm text-md lg:text-lg placeholder:text-secondary`}
               placeholder={isEditMode ? "이 장소의 별명을 지어주세요" : ""}
               readOnly={!isEditMode}
               onChange={(e) => setInput(e.target.value)}

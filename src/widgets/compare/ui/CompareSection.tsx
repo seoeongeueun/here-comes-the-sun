@@ -130,7 +130,7 @@ export function CompareSection() {
                   <span className="text-lg ">
                     {convertWeatherCodeToEmoji(comparisonResult.selectedCode)}
                   </span>
-                  <span className="text-s md:text-sm text-error">
+                  <span className="text-s lg:text-sm text-error">
                     {selectedCityAddress}
                   </span>
                 </div>
@@ -138,7 +138,7 @@ export function CompareSection() {
                   <span className="text-lg">
                     {convertWeatherCodeToEmoji(comparisonResult.currentCode)}
                   </span>
-                  <span className="text-s md:text-sm text-error">
+                  <span className="text-s lg:text-sm text-error">
                     {currentLocationAddress}
                   </span>
                 </div>

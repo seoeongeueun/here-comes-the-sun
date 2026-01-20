@@ -88,10 +88,10 @@ export function CityCard(city: Favorite) {
       </span>
       <div className="flex flex-col items-center justify-between w-full h-fit gap-0.5 truncate">
         <div className="flex flex-row items-center justify-between w-full gap-1 text-xs">
-          <h3>{city.nickname || city.sido}</h3>
+          <h3 className="w-full truncate">{city.nickname || city.sido}</h3>
           <div
             id="temperature"
-            className={`flex flex-row gap-1 text-xxs text-error min-w-4 h-4 rounded-sm ${isLoading ? " bg-background animate-[pulse_1.6s_ease-in-out_infinite] transition-colors duration-300" : ""}`}
+            className={`w-full whitespace-nowrap flex flex-row justify-end gap-1 text-xxs text-error min-w-4 h-4 rounded-sm ${isLoading ? " bg-background animate-[pulse_1.6s_ease-in-out_infinite] transition-colors duration-300" : ""}`}
           >
             <p>
               {dailyMinMax.min != null

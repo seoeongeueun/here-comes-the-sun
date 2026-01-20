@@ -89,7 +89,7 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
   return (
     <div className="flex flex-col w-full">
       <section className="flex w-full h-fit flex-col">
-        <header className="flex-wrap">
+        <header className="flex-wrap gap-0! md:gap-3">
           <h2>
             {location && location.sido?.length > 0
               ? `${location.sido} ${location.sigungu} ${location.dong}`
