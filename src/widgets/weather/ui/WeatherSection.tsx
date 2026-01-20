@@ -89,15 +89,15 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
   return (
     <div className="flex flex-col w-full">
       <section className="flex w-full h-fit flex-col">
-        <header>
-          <h2 className="text-sm">
+        <header className="flex-wrap">
+          <h2>
             {location && location.sido?.length > 0
               ? `${location.sido} ${location.sigungu} ${location.dong}`
               : "현 위치"}
             의 시간별 날씨
           </h2>
           {!isLoading && !isError && (
-            <div className="flex flex-row items-center justify-between py-2 text-xs text-white gap-2">
+            <div className="flex flex-row items-center justify-between md:py-2 text-xs text-white gap-2">
               <p>
                 🌡️ 최저{" "}
                 {dailyMinMax.min != null
@@ -142,7 +142,7 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
                     <span className="text-xl">
                       {convertWeatherCodeToEmoji(point.weatherCode)}
                     </span>
-                    <span className="text-s text-error">
+                    <span className="text-xs md:text-s text-error">
                       {point.temperature != null
                         ? `${Math.round(point.temperature)}°C`
                         : "N/A"}

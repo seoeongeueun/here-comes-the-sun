@@ -78,7 +78,7 @@ export function InfoPage() {
   }
 
   return (
-    <div className="p-4 pt-8 flex flex-col gap-4 w-full max-w-[1000px] justify-self-center">
+    <div className="p-4 md:pt-8 flex flex-col gap-4 w-full max-w-[1000px] justify-self-center">
       <header className="w-full flex flex-row gap-4">
         <button
           type="button"

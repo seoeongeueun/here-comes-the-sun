@@ -121,16 +121,16 @@ export function CompareSection() {
           현재 위치 정보를 가져올 수 없습니다
         </p>
       ) : (
-        <div className="w-full bg-white rounded-sm h-fit flex flex-row justify-evenly items-center py-4 px-6">
+        <div className="w-full bg-white rounded-sm h-fit flex flex-row justify-evenly items-center px-4 py-4 md:px-6">
           {canCompare && (
             <div className="flex flex-col gap-2 w-full">
               {/* 날씨 이모지 & 주소 */}
-              <div className="flex flex-row py-4 w-full justify-around items-center">
+              <div className="flex flex-row py-4 w-full justify-around items-start">
                 <div className="flex flex-col items-center gap-2 w-1/2">
                   <span className="text-lg ">
                     {convertWeatherCodeToEmoji(comparisonResult.selectedCode)}
                   </span>
-                  <span className="text-sm text-error">
+                  <span className="text-s md:text-sm text-error">
                     {selectedCityAddress}
                   </span>
                 </div>
@@ -138,13 +138,13 @@ export function CompareSection() {
                   <span className="text-lg">
                     {convertWeatherCodeToEmoji(comparisonResult.currentCode)}
                   </span>
-                  <span className="text-sm text-error">
+                  <span className="text-s md:text-sm text-error">
                     {currentLocationAddress}
                   </span>
                 </div>
               </div>
-              <p className="text-s">{tempMessage}</p>
-              <p className="text-s">{precipitationMessage}</p>
+              <p className="text-xs md:text-s">{tempMessage}</p>
+              <p className="text-xs md:text-s">{precipitationMessage}</p>
             </div>
           )}
         </div>

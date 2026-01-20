@@ -6,12 +6,12 @@ export function FavoritesSection() {
   const favoriteCities = useFavoriteCityStore((state) => state.favorites);
 
   return (
-    <section className="w-full">
+    <section className="w-full h-fit">
       <header>
         <h2>내 장소</h2>
         <span className="text-xs">{favoriteCities.length}/6</span>
       </header>
-      <div className="grid grid-cols-3 gap-3 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
         {favoriteCities.length === 0 ? (
           <div className="h-30 flex flex-col justify-center items-center text-secondary text-sm w-full text-center">
             <span>즐겨찾기한 주소가 없습니다</span>

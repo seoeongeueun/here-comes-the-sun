@@ -271,7 +271,11 @@ export function KakaoMap() {
   }, [selectedLocation, selectedLocationWeather.data]);
 
   return (
-    <div id="map" ref={mapRef} className="w-full h-full bg-white rounded-md">
+    <div
+      id="map"
+      ref={mapRef}
+      className="w-full h-full md:h-full bg-white rounded-md"
+    >
       {showMapError && (
         <div className="text-background text-s flex flex-col justify-self-center items-center justify-center w-fit h-full pointer-events-none">
           <h3>⚡ 카카오 지도를 불러올 수 없습니다.</h3>
