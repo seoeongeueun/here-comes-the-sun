@@ -188,7 +188,7 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
             ))}
           </ul>
         )}
-        {(clothingAdvice.options.length === 0 || isError) && (
+        {((!isLoading && clothingAdvice.options.length < 0) || isError) && (
           <div className="h-30 text-secondary text-center w-full flex items-center justify-center">
             해당 장소의 옷차림 정보를 제공할 수 없습니다
           </div>

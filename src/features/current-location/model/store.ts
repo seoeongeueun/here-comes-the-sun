@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import type { CurrentLocationState } from "./types";
-import { roundToThreeDecimals } from "@/shared/lib";
 
 export const useCurrentLocationStore = create<CurrentLocationState>((set) => ({
   currentLocation: null,
@@ -8,8 +7,8 @@ export const useCurrentLocationStore = create<CurrentLocationState>((set) => ({
     set({
       currentLocation: {
         ...location,
-        lat: roundToThreeDecimals(location.lat),
-        lng: roundToThreeDecimals(location.lng),
+        lat: location.lat,
+        lng: location.lng,
       },
     }),
   clearCurrentLocation: () => set({ currentLocation: null }),
