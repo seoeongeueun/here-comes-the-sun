@@ -69,10 +69,6 @@ export function InfoPage() {
     navigate("/");
   };
 
-  useEffect(() => {
-    console.log(isEditMode);
-  }, [isEditMode]);
-
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
     return <div>유효하지 않은 좌표입니다.</div>;
   }

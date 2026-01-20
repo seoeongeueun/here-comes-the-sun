@@ -117,9 +117,15 @@ export function KakaoMap() {
       });
   }, [hide, setCurrentLocation, show]);
 
+  // useEffect(() => {
+  //   getCurrentLocation();
+  // }, [getCurrentLocation]);
+
   useEffect(() => {
+    if (currentLocation?.lat != null && currentLocation?.lng != null) return;
+
     getCurrentLocation();
-  }, [getCurrentLocation]);
+  }, [currentLocation?.lat, currentLocation?.lng, getCurrentLocation]);
 
   useEffect(() => {
     loadKakaoMaps()
