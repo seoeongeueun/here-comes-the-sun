@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   loadKakaoMaps,
   DEFAULT_CENTER,
@@ -22,6 +22,7 @@ export function KakaoMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const managerRef = useRef<OverlayManager | null>(null);
   const geocoderRef = useRef<kakao.maps.services.Geocoder | null>(null);
+  const hideTimerRef = useRef<number | null>(null);
   const selectedLocation = useSelectLocationStore((s) => s.selectedLocation);
   const selectLocation = useSelectLocationStore((s) => s.selectLocation);
   const tmpSelectedLocation = useSelectLocationStore(
@@ -33,6 +34,7 @@ export function KakaoMap() {
   );
   const currentLocation = useCurrentLocationStore((s) => s.currentLocation);
   const show = useToastStore((s) => s.show);
+  const hide = useToastStore((s) => s.hide);
   const setSearchInProgress = useSelectLocationStore(
     (s) => s.setSearchInProgress,
   );
@@ -90,8 +92,14 @@ export function KakaoMap() {
     });
   }, [citiesEmojiAndTemp]);
 
-  useEffect(() => {
-    // 브라우저에서 현재 위치 가져오기
+  const getCurrentLocation = useCallback(async () => {
+    show("현재 위치를 계산하고 있습니다.");
+
+    // 이전 타이머가 있으면 취소
+    if (hideTimerRef.current !== null) {
+      clearTimeout(hideTimerRef.current);
+    }
+
     getCurrentPositionAsync()
       .then((position) => {
         setCurrentLocation({
@@ -99,6 +107,11 @@ export function KakaoMap() {
           lng: position.lng,
           sido: "",
         });
+
+        hideTimerRef.current = window.setTimeout(() => {
+          hide();
+          hideTimerRef.current = null;
+        }, 2000);
       })
 
       .catch((error) => {
@@ -111,7 +124,11 @@ export function KakaoMap() {
           show("현재 위치를 가져오는 중 오류가 발생했습니다.");
         }
       });
-  }, []);
+  }, [hide, setCurrentLocation, show]);
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, [getCurrentLocation]);
 
   useEffect(() => {
     loadKakaoMaps()
@@ -166,6 +183,11 @@ export function KakaoMap() {
 
     return () => {
       managerRef.current?.clearAll();
+
+      // 컴포넌트 언마운트 시 타이머 정리
+      if (hideTimerRef.current !== null) {
+        clearTimeout(hideTimerRef.current);
+      }
     };
   }, []);
 
@@ -274,7 +296,7 @@ export function KakaoMap() {
     <div
       id="map"
       ref={mapRef}
-      className="w-full h-full md:h-full bg-white rounded-md"
+      className="relative w-full h-full md:h-full bg-white rounded-md"
     >
       {showMapError && (
         <div className="text-background text-s flex flex-col justify-self-center items-center justify-center w-fit h-full pointer-events-none">
@@ -282,6 +304,13 @@ export function KakaoMap() {
           <span>인터넷 연결 또는 남은 사용량을 확인해주세요.</span>
         </div>
       )}
+      <button
+        type="button"
+        onClick={() => getCurrentLocation()}
+        className="rounded-full w-8 h-8 cursor-pointer border-2 border-theme bg-white/95 shadow-md absolute top-4 right-4 z-50 hover:bg-theme transition-colors duration-300"
+      >
+        📍
+      </button>
     </div>
   );
 }

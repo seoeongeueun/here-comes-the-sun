@@ -2,13 +2,14 @@ import { create } from "zustand";
 
 interface ToastState {
   message: string | null;
-  show: (message: string) => void;
+  type: "success" | "error" | "info";
+  show: (message: string, type?: "success" | "error" | "info") => void;
   hide: () => void;
 }
 
 export const useToastStore = create<ToastState>((set) => ({
   message: null,
   type: "info",
-  show: (message) => set({ message }),
+  show: (message, type = "info") => set({ message, type }),
   hide: () => set({ message: null }),
 }));
