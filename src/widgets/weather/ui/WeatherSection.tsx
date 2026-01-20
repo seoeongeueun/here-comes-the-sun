@@ -78,7 +78,10 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
         const element = document.getElementById(
           `hourly-weather-${nowPoint.time}`,
         );
-        element?.scrollIntoView({ behavior: "smooth", inline: "center" });
+        if (element) {
+          element.classList.add("border-2");
+          element.scrollIntoView({ behavior: "smooth", inline: "center" });
+        }
       });
     }
   }, [hourlyToday]);
@@ -87,10 +90,10 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
     <div className="flex flex-col w-full">
       <section className="flex w-full h-fit flex-col">
         <header>
-          <h2 className="text-white text-sm">
+          <h2 className="text-sm">
             {location && location.sido?.length > 0
               ? `${location.sido} ${location.sigungu} ${location.dong}`
-              : "Unknown"}{" "}
+              : "현 위치"}
             의 시간별 날씨
           </h2>
           {!isLoading && !isError && (
@@ -131,7 +134,7 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
                   <figure
                     key={point.time}
                     id={`hourly-weather-${point.time}`}
-                    className="bg-white rounded-sm flex flex-col items-center justify-center p-2 gap-2 aspect-square min-w-20 h-30"
+                    className="bg-white border-theme rounded-sm flex flex-col items-center justify-center p-2 gap-2 aspect-square min-w-20 h-30"
                   >
                     <time className="text-black text-xxs" dateTime={point.time}>
                       {point.time.slice(11, 16)}
@@ -156,7 +159,7 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
 
       <section className="flex flex-col">
         <header className="flex flex-row items-center gap-3">
-          <h2 className="text-white">날씨에 맞는 옷</h2>
+          <h2 className="text-sm">날씨에 맞는 옷</h2>
           {clothingAdvice.hasTempDiff && (
             <span className="text-xs">
               👖 일교차가 큰 날이에요. 옷차림에 유의하세요.
