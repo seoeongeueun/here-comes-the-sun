@@ -79,6 +79,7 @@ export function KakaoMap() {
 
     citiesEmojiAndTemp.forEach((c) => {
       if (!c.id) return;
+      if (!c.emoji) return;
 
       manager.updateCityWeather(c.id, c.emoji, c.temp ?? undefined);
     });

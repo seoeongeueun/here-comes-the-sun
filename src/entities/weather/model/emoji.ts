@@ -12,8 +12,10 @@ export type WeatherEmojiInput = {
   snowfall?: number | null; // cm
 };
 
-export function convertWeatherCodeToEmoji(code: number | null): WeatherEmoji {
-  if (code === null) return "partly_cloudy";
+export function convertWeatherCodeToEmoji(
+  code: number | null,
+): WeatherEmoji | "" {
+  if (code === null) return "";
 
   if (code === 0) return "sunny"; // 맑음
   if (code === 1) return "partly_cloudy"; // 구름 조금
