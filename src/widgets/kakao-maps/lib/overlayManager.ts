@@ -1,5 +1,6 @@
 import type { City } from "@/entities/city";
 import { fillCityMarkerContent } from "./fillCityMarkerContent";
+import type { WeatherEmoji } from "@/entities/weather";
 
 interface OverlayItem {
   overlay: kakao.maps.CustomOverlay;
@@ -166,19 +167,28 @@ export class OverlayManager {
   }
 
   //특정 도시 마커의 날씨 이모지와 온도를 업데이트
-  updateCityWeather(cityId: string, emoji: string, temp?: number): void {
+  updateCityWeather(cityId: string, emoji: WeatherEmoji, temp?: number): void {
     const item = this.overlays.get(cityId);
     if (!item) return;
 
-    // 날씨 이모지 업데이트
-    const emojiElement = item.content.querySelector("#weather-emoji");
-    if (emojiElement) {
-      emojiElement.textContent = emoji;
+    // 날씨 이미지 src 업데이트
+    const weatherImg = item.content.querySelector(
+      "#weather-img",
+    ) as HTMLImageElement;
+    if (weatherImg) {
+      weatherImg.src = `/weather/${emoji}.png`;
+
       // 로딩 애니메이션 제거
-      emojiElement.classList.remove(
-        "animate-[pulse_1.6s_ease-in-out_infinite]",
-        "bg-background",
-      );
+      const emojiElement = item.content.querySelector("#weather-emoji");
+
+      if (emojiElement) {
+        emojiElement.classList.remove(
+          "animate-[pulse_1.6s_ease-in-out_infinite]",
+          "bg-background",
+        );
+      }
+
+      weatherImg.classList.remove("opacity-0");
     }
 
     // 온도 업데이트
