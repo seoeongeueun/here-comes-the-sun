@@ -8,6 +8,7 @@ import {
   compareCurrentWeather,
   convertWeatherCodeToEmoji,
 } from "@/entities/weather";
+import { WeatherImage } from "@/shared/ui";
 
 export function CompareSection() {
   const currentLocation = useCurrentLocationStore((s) => s.currentLocation);
@@ -124,20 +125,25 @@ export function CompareSection() {
         <div className="w-full bg-white rounded-sm h-fit flex flex-row justify-evenly items-center px-4 py-4 md:px-6">
           {canCompare && (
             <div className="flex flex-col gap-2 w-full">
-              {/* 날씨 이모지 & 주소 */}
               <div className="flex flex-row py-4 w-full justify-around items-start">
                 <div className="flex flex-col items-center gap-2 w-1/2">
-                  <span className="text-lg ">
-                    {convertWeatherCodeToEmoji(comparisonResult.selectedCode)}
-                  </span>
+                  <WeatherImage
+                    size="large"
+                    weather={convertWeatherCodeToEmoji(
+                      comparisonResult.selectedCode,
+                    )}
+                  />
                   <span className="text-s lg:text-sm text-error">
                     {selectedCityAddress}
                   </span>
                 </div>
                 <div className="flex flex-col items-center gap-2 w-1/2">
-                  <span className="text-lg">
-                    {convertWeatherCodeToEmoji(comparisonResult.currentCode)}
-                  </span>
+                  <WeatherImage
+                    size="large"
+                    weather={convertWeatherCodeToEmoji(
+                      comparisonResult.currentCode,
+                    )}
+                  />
                   <span className="text-s lg:text-sm text-error">
                     {currentLocationAddress}
                   </span>

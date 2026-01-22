@@ -7,6 +7,7 @@ import { weatherQueries, convertWeatherCodeToEmoji } from "@/entities/weather";
 import { parseDailyMinMax } from "@/entities/weather";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { routes } from "@/shared/config/routes";
+import { WeatherImage } from "@/shared/ui";
 
 export function CityCard(city: Favorite) {
   const selectLocation = useSelectLocationStore(
@@ -78,14 +79,21 @@ export function CityCard(city: Favorite) {
         onClick={handleFavoriteClick}
         aria-label={`즐겨찾기 ${city.sido} ${city.sigungu ?? ""} ${city.dong ?? ""} 토글`}
       ></button>
-      <span
+      <div
         id="weather-emoji"
-        className={`text-lg h-10 min-w-10 flex items-center justify-center rounded-sm ${isLoading ? "bg-background animate-[pulse_1.6s_ease-in-out_infinite] transition-colors duration-300" : ""}`}
+        className={`mb-1 flex items-center w-12 h-12 justify-center rounded-sm ${isLoading ? "bg-background animate-[pulse_1.6s_ease-in-out_infinite] transition-colors duration-300" : ""}`}
         aria-hidden="true"
       >
-        {weatherData?.current &&
-          convertWeatherCodeToEmoji(weatherData.current.weather_code)}
-      </span>
+        {weatherData?.current && (
+          <WeatherImage
+            weather={convertWeatherCodeToEmoji(
+              weatherData.current.weather_code,
+            )}
+            size="medium"
+            className={`${isLoading ? "opacity-0" : "opacity-100"}`}
+          />
+        )}
+      </div>
       <div className="flex flex-col items-center justify-between w-full h-fit gap-0.5 truncate">
         <div className="flex flex-row items-center justify-between w-full gap-1 text-xs">
           <h3 className="w-full truncate">{city.nickname || city.sido}</h3>

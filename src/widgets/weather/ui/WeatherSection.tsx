@@ -3,6 +3,7 @@ import { weatherQueries } from "@/entities/weather";
 import { useCurrentLocationStore } from "@/features/current-location";
 import { useSelectLocationStore } from "@/features/select-location";
 import { useEffect, useMemo } from "react";
+import { WeatherImage } from "@/shared/ui";
 import {
   parseHourlyByDate,
   convertWeatherCodeToEmoji,
@@ -99,7 +100,7 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
           {!isLoading && !isError && (
             <div className="flex flex-row items-center justify-between md:py-2 text-xs text-white gap-2">
               <p>
-                🌡️ 최저{" "}
+                최저{" "}
                 {dailyMinMax.min != null
                   ? `${Math.round(dailyMinMax.min)}°C`
                   : "N/A"}
@@ -139,9 +140,10 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
                     <time className="text-black text-xxs" dateTime={point.time}>
                       {point.time.slice(11, 16)}
                     </time>
-                    <span className="text-xl">
-                      {convertWeatherCodeToEmoji(point.weatherCode)}
-                    </span>
+                    <WeatherImage
+                      weather={convertWeatherCodeToEmoji(point.weatherCode)}
+                      size="medium"
+                    />
                     <span className="text-xs md:text-s text-error">
                       {point.temperature != null
                         ? `${Math.round(point.temperature)}°C`
@@ -164,7 +166,7 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
           <h2 className="text-sm">날씨에 맞는 옷</h2>
           {clothingAdvice.hasTempDiff && (
             <span className="text-xs">
-              👖 일교차가 큰 날이에요. 옷차림에 유의하세요.
+              일교차가 큰 날이에요. 옷차림에 유의하세요.
             </span>
           )}
         </header>
@@ -181,6 +183,8 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
                 <img
                   src={`/icon/${advice}.png`}
                   alt={convertClothingToKorean([advice])[0] + " 아이콘"}
+                  width={56}
+                  height={56}
                   className="w-14 h-14 object-contain"
                 />
                 <span>{convertClothingToKorean([advice])[0]}</span>
