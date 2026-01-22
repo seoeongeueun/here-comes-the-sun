@@ -167,7 +167,11 @@ export class OverlayManager {
   }
 
   //특정 도시 마커의 날씨 이모지와 온도를 업데이트
-  updateCityWeather(cityId: string, emoji: WeatherEmoji, temp?: number): void {
+  updateCityWeather(
+    cityId: string,
+    emoji: WeatherEmoji | "",
+    temp?: number,
+  ): void {
     const item = this.overlays.get(cityId);
     if (!item) return;
 

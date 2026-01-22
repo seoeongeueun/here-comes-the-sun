@@ -3,10 +3,12 @@ import type { WeatherEmoji } from "@/entities/weather";
 
 interface WeatherImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   size: "small" | "medium" | "large";
-  weather: WeatherEmoji;
+  weather: WeatherEmoji | "";
 }
 
 export function WeatherImage({ size, weather }: WeatherImageProps) {
+  if (!weather) return;
+
   return (
     <img
       loading="lazy"

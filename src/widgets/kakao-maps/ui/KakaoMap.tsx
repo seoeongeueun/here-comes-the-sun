@@ -226,12 +226,7 @@ export function KakaoMap() {
 
   useEffect(() => {
     //현재 좌표는 가져왔지만 아직 주소 정보가 없는 경우에만 변환을 시도
-    console.log(
-      "Checking current location address:",
-      currentLocation,
-      "isGeocoderReady:",
-      isGeocoderReady,
-    );
+
     if (
       currentLocation?.lng &&
       currentLocation?.lat &&
