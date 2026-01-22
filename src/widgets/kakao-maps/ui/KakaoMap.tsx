@@ -69,7 +69,7 @@ export function KakaoMap() {
       id: city.id,
       sido: city.sido,
       temp: data?.temp ?? null,
-      emoji: code == null ? "…" : convertWeatherCodeToEmoji(code),
+      emoji: convertWeatherCodeToEmoji(code),
     };
   });
 
@@ -79,7 +79,6 @@ export function KakaoMap() {
 
     citiesEmojiAndTemp.forEach((c) => {
       if (!c.id) return;
-      if (c.emoji === "…") return;
 
       manager.updateCityWeather(c.id, c.emoji, c.temp ?? undefined);
     });
