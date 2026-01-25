@@ -84,7 +84,7 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
       umbrellaResult.needed,
       umbrellaResult.isHeavyRain,
     );
-  }, [dailyMinMax, umbrellaResult.isHeavyRain, umbrellaResult.needed]);
+  }, [dailyMinMax, umbrellaResult]);
 
   useEffect(() => {
     //현재 시간은 어느 hourly 데이터와 매칭되는지 확인
