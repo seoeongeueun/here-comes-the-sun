@@ -33,7 +33,8 @@ export const CLOTHING_ADVICE: Record<number, CLOTHING_OPTIONS[]> = {
 };
 
 export const SPECIAL_CLOTHING: Record<string, CLOTHING_OPTIONS[]> = {
-  rain: ["rainboots", "umbrella"],
+  rain: ["umbrella"],
+  heavyRain: ["umbrella", "rainboots"],
 };
 
 // 한글로 매핑
@@ -69,7 +70,13 @@ const TEMP_KEYS = Object.keys(CLOTHING_ADVICE)
 export function getClothingAdvice(
   min: number,
   max: number,
-): { options: CLOTHING_OPTIONS[]; hasTempDiff: boolean } {
+  isRain?: boolean,
+  isHeavyRain?: boolean,
+): {
+  options: CLOTHING_OPTIONS[];
+  rainExtras: CLOTHING_OPTIONS[];
+  hasTempDiff: boolean;
+} {
   const minKey = TEMP_KEYS.find((t) => min <= t) ?? 999;
   const maxKey = TEMP_KEYS.find((t) => max <= t) ?? 999;
 
@@ -82,8 +89,17 @@ export function getClothingAdvice(
               (TEMP_KEYS.indexOf(maxKey) - TEMP_KEYS.indexOf(minKey)) / 2,
             )
         ];
+
+  //isRain이 있으면 speical clothing도 추가
+  const rainExtras = isHeavyRain
+    ? SPECIAL_CLOTHING.heavyRain
+    : isRain
+      ? SPECIAL_CLOTHING.rain
+      : [];
+
   return {
     options: CLOTHING_ADVICE[key as keyof typeof CLOTHING_ADVICE],
+    rainExtras,
     hasTempDiff:
       Math.abs(TEMP_KEYS.indexOf(maxKey) - TEMP_KEYS.indexOf(minKey)) >= 2,
   };
