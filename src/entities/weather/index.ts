@@ -7,5 +7,12 @@ export type { OpenMeteoHourly } from "./model/types";
 export { compareCurrentWeather } from "./model/compare";
 export type { WeatherEmoji } from "./model/emoji";
 
+// 강수 관련
+export { isPrecipitation } from "./model/percipitation";
+export {
+  getPrecipitationInHourlyData,
+  needsUmbrella,
+} from "./model/percipitation";
+
 // 옷 추천 관련
 export { getClothingAdvice, convertClothingToKorean } from "./model/clothing";
