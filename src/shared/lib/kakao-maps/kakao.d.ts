@@ -21,6 +21,9 @@ declare global {
 
         getCenter(): LatLng;
         setCenter(latlng: LatLng): void;
+        panTo(latlng: LatLng): void;
+
+        setLevel(level: number): void;
       }
 
       class Marker {

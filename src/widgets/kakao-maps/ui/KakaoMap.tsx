@@ -290,6 +290,10 @@ export function KakaoMap() {
 
     const manager = managerRef.current;
 
+    const map = mapInstanceRef.current;
+
+    console.log("Selected location changed:", selectedLocation);
+
     if (
       selectedLocation &&
       selectedLocation.sido &&
@@ -309,6 +313,13 @@ export function KakaoMap() {
         isFavorite(makeUniqueCityId(selectedLocation)),
       ); // 즐겨찾기 여부 전달
 
+      //새로운 마커를 중앙으로 이동
+      if (map) {
+        map.panTo(
+          new kakao.maps.LatLng(selectedLocation.lat, selectedLocation.lng),
+        );
+      }
+
       // 선택된 장소의 날씨 데이터가 있으면 마커 업데이트
       if (selectedLocationWeather.data?.code != null) {
         const emoji = convertWeatherCodeToEmoji(
@@ -325,6 +336,15 @@ export function KakaoMap() {
       manager.deleteOverlay("selected-location");
       manager.showAll();
       console.log("디폴트 마커 다시 노출");
+
+      //줌 디폴트로 변경
+      const map = mapInstanceRef.current;
+      if (map) {
+        map.setLevel(DEFAULT_LEVEL);
+        map.panTo(
+          new kakao.maps.LatLng(DEFAULT_CENTER.lat, DEFAULT_CENTER.lng),
+        );
+      }
     }
   }, [selectedLocation, selectedLocationWeather.data]);
 
