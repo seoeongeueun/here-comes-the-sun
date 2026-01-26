@@ -74,7 +74,7 @@ export function InfoPage() {
   }
 
   return (
-    <div className="p-4 flex flex-col gap-4 w-full max-w-[1000px] justify-self-center">
+    <div className="flex flex-col w-full h-full">
       <header className="w-full flex flex-row gap-4">
         <button
           type="button"
@@ -92,7 +92,7 @@ export function InfoPage() {
             <input
               type="text"
               className={`${isEditMode ? "border-secondary" : "border-none focus:outline-none!"} border px-2 w-full focus:border-black rounded-sm text-md lg:text-lg placeholder:text-secondary`}
-              placeholder={isEditMode ? "이 장소의 별명을 지어주세요" : ""}
+              placeholder="이 장소의 별명을 지어주세요"
               readOnly={!isEditMode}
               onChange={(e) => setInput(e.target.value)}
               value={isEditMode ? input : (favorite?.nickname ?? "")}
@@ -101,7 +101,7 @@ export function InfoPage() {
               <button
                 type="button"
                 onClick={handleEditClick}
-                className="text-xs cursor-pointer text-black whitespace-nowrap"
+                className="text-xs underline underline-offset-2 cursor-pointer text-black whitespace-nowrap"
               >
                 닉네임 변경하기
               </button>
@@ -109,7 +109,7 @@ export function InfoPage() {
               <button
                 type="submit"
                 form="nickname-form"
-                className="text-xs cursor-pointer text-black whitespace-nowrap"
+                className="text-xs underline underline-offset-2 cursor-pointer text-black whitespace-nowrap"
               >
                 저장하기
               </button>
@@ -117,9 +117,10 @@ export function InfoPage() {
           </form>
         )}
       </header>
-
-      <WeatherSection mode="selected" />
-      <CompareSection />
+      <div className="h-full md:overflow-y-auto w-full">
+        <WeatherSection mode="selected" />
+        <CompareSection />
+      </div>
     </div>
   );
 }

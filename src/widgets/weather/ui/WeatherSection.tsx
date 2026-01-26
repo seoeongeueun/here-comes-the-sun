@@ -50,7 +50,6 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
     const todayDate = currentTime?.slice(0, 10);
     if (!todayDate) return [];
 
-    console.log(parseHourlyByDate(hourlyData, todayDate));
     return parseHourlyByDate(hourlyData, todayDate);
   }, [hourlyData, currentTime]);
 
@@ -100,7 +99,11 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
         );
         if (element) {
           element.classList.add("border-2");
-          element.scrollIntoView({ behavior: "smooth", inline: "center" });
+          element.scrollIntoView({
+            behavior: "smooth",
+            inline: "center",
+            block: "nearest",
+          });
         }
       });
     }
@@ -158,6 +161,7 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
                       (e.currentTarget as HTMLElement).scrollIntoView({
                         behavior: "smooth",
                         inline: "center",
+                        block: "nearest",
                       })
                     }
                     className="bg-white border-theme rounded-sm flex flex-col items-center justify-center p-2 gap-2 aspect-square min-w-20 h-30"
