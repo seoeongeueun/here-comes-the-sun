@@ -53,7 +53,7 @@ export const weatherQueries = {
         ({
           temp: res.current?.temperature_2m ?? null,
           code: res.current?.weather_code ?? null,
-        } satisfies { temp: number | null; code: number | null }),
+        }) satisfies { temp: number | null; code: number | null },
       staleTime: WEATHER_STALE_TIME,
       gcTime: WEATHER_CACHE_TIME,
       enabled: Number.isFinite(p.lat) && Number.isFinite(p.lng),

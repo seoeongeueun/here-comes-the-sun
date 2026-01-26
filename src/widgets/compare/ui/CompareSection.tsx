@@ -34,38 +34,15 @@ export function CompareSection() {
     enabled: !!selectedLocation?.lat && !!selectedLocation?.lng,
   });
 
-  // 주소 포맷팅
-  const formatAddress = useMemo(
-    () =>
-      (
-        location: typeof currentLocation | typeof selectedLocation,
-        suffix = "",
-      ) => {
-        if (!location?.sido) return suffix ? `현 위치 ${suffix}` : "현 위치";
-        return `${location.sido} ${location.sigungu} ${location.dong} ${suffix}`.trim();
-      },
-    [],
-  );
-
-  const selectedCityAddress = useMemo(
-    () => formatAddress(selectedLocation, "(선택된 위치)"),
-    [selectedLocation, formatAddress],
-  );
-
-  const currentLocationAddress = useMemo(
-    () => formatAddress(currentLocation, "(현 위치)"),
-    [currentLocation, formatAddress],
-  );
-
-  const currentWeatherData = currentLocationWeather.data?.current;
-  const selectedWeatherData = selectedLocationWeather.data?.current;
-
   const comparisonResult = useMemo(() => {
-    if (!currentWeatherData || !selectedWeatherData) {
+    if (!currentLocationWeather.data || !selectedLocationWeather.data) {
       return null;
     }
-    return compareCurrentWeather(currentWeatherData, selectedWeatherData);
-  }, [currentWeatherData, selectedWeatherData]);
+    return compareCurrentWeather(
+      currentLocationWeather.data,
+      selectedLocationWeather.data,
+    );
+  }, [currentLocationWeather.data, selectedLocationWeather.data]);
 
   useEffect(() => {
     if (
@@ -88,25 +65,40 @@ export function CompareSection() {
     }
   }, [currentLocation, setCurrentLocation]);
 
-  const tempMessage = useMemo(() => {
+  const precipitationMessage = useMemo(() => {
+    const message = { tmp: "", percip: "", isHeavy: "" };
+
     if (!comparisonResult) return "";
+
     const roundedDiff = Math.round(comparisonResult.tmpDiff);
     const diff = Math.abs(roundedDiff);
-    return roundedDiff > 0
-      ? `🔥 선택된 위치의 기온이 ${diff}° 더 높아요`
-      : roundedDiff === 0
-        ? `🌡️ 두 장소의 현재 기온이 동일해요`
-        : `🧊 선택된 위치의 기온이 ${diff}° 더 낮아요`;
-  }, [comparisonResult]);
+    console.log("roundedDiff:", roundedDiff);
 
-  const precipitationMessage = useMemo(() => {
-    if (!comparisonResult) return "";
-    if (!comparisonResult.hasShowerDiff) {
-      return "🌂 두 장소 모두 비/눈이 내리지 않고 있어요";
+    if (roundedDiff > 0) {
+      message.tmp = `🔥 선택된 위치의 현재 기온이 ${diff}° 더 높아요. `;
+    } else if (roundedDiff < 0) {
+      message.tmp = `🧊 선택된 위치의 현재 기온이 ${diff}° 더 낮아요. `;
+    } else {
+      message.tmp = `🌡️ 두 장소의 현재 기온이 동일해요. `;
     }
-    return comparisonResult.isShowerCurrent
-      ? `☂️ 선택된 위치는 비/눈이 내리지 않고 있어요`
-      : `☂️ 선택된 위치는 비/눈이 내리고 있어요. 우산을 챙겨주세요.`;
+
+    // 두 곳 다 강수 없음
+    if (!comparisonResult.hasShowerDiff) {
+      message.percip = comparisonResult.isShowerCurrent
+        ? "☂️ 두 장소 모두 비/눈 예보가 있어요."
+        : "🌂 두 장소 모두 비/눈 예보가 없어요.";
+    } else {
+      message.percip = comparisonResult.isShowerCurrent
+        ? `🌂 선택된 위치는 비/눈 예보가 없어요. 우산을 챙기지 않으셔도 돼요.`
+        : `☂️ 선택된 위치는 비/눈 예보가 있어요. 우산을 챙겨주세요.`;
+    }
+
+    if (comparisonResult.hasShowerLevelDiff) {
+      message.isHeavy = comparisonResult.isHeavyShowerCurrent
+        ? "🌧️ 선택된 위치는 현재 위치보다 약한 비가 내릴 예정이에요."
+        : "🌧️ 선택된 위치는 현재 위치보다 강한 비가 내릴 예정이에요.";
+    }
+    return message;
   }, [comparisonResult]);
 
   const canCompare =
@@ -122,10 +114,10 @@ export function CompareSection() {
           현재 위치 정보를 가져올 수 없습니다
         </p>
       ) : (
-        <div className="w-full bg-white rounded-sm h-fit flex flex-row justify-evenly items-center px-4 py-4 md:px-6">
+        <div className="w-full bg-white rounded-sm h-fit flex flex-row justify-evenly items-center px-4 py-4 lg:px-6">
           {canCompare && (
             <div className="flex flex-col gap-2 w-full">
-              <div className="flex flex-row py-4 w-full justify-around items-start">
+              <div className="flex flex-row gap-1 py-4 w-full justify-around items-start">
                 <div className="flex flex-col items-center gap-2 w-1/2">
                   <WeatherImage
                     size="large"
@@ -133,9 +125,14 @@ export function CompareSection() {
                       comparisonResult.selectedCode,
                     )}
                   />
-                  <span className="text-s lg:text-sm text-error">
-                    {selectedCityAddress}
-                  </span>
+                  <div className="flex flex-row items-start gap-3">
+                    <span className="lg:mt-1.5 text-xxs text-black whitespace-nowrap">
+                      선택 위치
+                    </span>
+                    <span className="text-xs lg:text-sm text-error">
+                      {`${selectedLocation.sido} ${selectedLocation.sigungu} ${selectedLocation.dong}`}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex flex-col items-center gap-2 w-1/2">
                   <WeatherImage
@@ -144,13 +141,21 @@ export function CompareSection() {
                       comparisonResult.currentCode,
                     )}
                   />
-                  <span className="text-s lg:text-sm text-error">
-                    {currentLocationAddress}
-                  </span>
+                  <div className="flex flex-row items-start gap-3">
+                    <span className="lg:mt-1.5 text-xxs text-black whitespace-nowrap">
+                      현 위치
+                    </span>
+                    <span className="text-xs lg:text-sm text-error">
+                      {`${currentLocation.sido} ${currentLocation.sigungu} ${currentLocation.dong}`}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <p className="text-xs md:text-s">{tempMessage}</p>
-              <p className="text-xs md:text-s">{precipitationMessage}</p>
+              {Object.values(precipitationMessage).map((msg, index) => (
+                <p key={index} className="text-xs lg:text-s">
+                  {msg}
+                </p>
+              ))}
             </div>
           )}
         </div>

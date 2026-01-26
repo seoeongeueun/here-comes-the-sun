@@ -31,7 +31,7 @@ function isHeavyPrecipitation(code: number): boolean {
   );
 }
 
-// 강수가 확인된 시간 데이터만 반환
+// 유의미한 강수가 확인된 시간 데이터만 반환
 export function getPrecipitationInHourlyData(
   hourly: OpenMeteoHourly,
   date: string, // "YYYY-MM-DD"
