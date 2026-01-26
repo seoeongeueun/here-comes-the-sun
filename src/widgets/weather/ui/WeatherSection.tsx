@@ -154,6 +154,12 @@ export function WeatherSection({ mode = "current" }: WeatherSectionProps) {
                   <figure
                     key={point.time}
                     id={`hourly-weather-${point.time}`}
+                    onClick={(e) =>
+                      (e.currentTarget as HTMLElement).scrollIntoView({
+                        behavior: "smooth",
+                        inline: "center",
+                      })
+                    }
                     className="bg-white border-theme rounded-sm flex flex-col items-center justify-center p-2 gap-2 aspect-square min-w-20 h-30"
                   >
                     <time className="text-black text-xxs" dateTime={point.time}>
