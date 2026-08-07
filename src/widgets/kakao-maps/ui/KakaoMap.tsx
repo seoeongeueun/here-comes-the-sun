@@ -86,37 +86,36 @@ export function KakaoMap() {
   }, [citiesEmojiAndTemp]);
 
   const getCurrentLocation = useCallback(async () => {
-    show("현재 위치를 계산하고 있습니다.");
+    //show("현재 위치를 계산하고 있습니다.");
 
     // 이전 타이머가 있으면 취소
     if (hideTimerRef.current !== null) {
       clearTimeout(hideTimerRef.current);
     }
 
-    getCurrentPositionAsync()
-      .then((position) => {
-        setCurrentLocation({
-          lat: position.lat,
-          lng: position.lng,
-          sido: "",
-        });
-
-        hideTimerRef.current = window.setTimeout(() => {
-          hide();
-          hideTimerRef.current = null;
-        }, 2000);
-      })
-
-      .catch((error) => {
-        console.log("현재 위치 가져오기 실패:", error);
-        if (error.code === 1) {
-          show(
-            "현재 위치를 가져올 수 없습니다.\n위치 정보 제공을 허용해주세요.",
-          );
-        } else {
-          show("현재 위치를 가져오는 중 오류가 발생했습니다.");
-        }
+    getCurrentPositionAsync().then((position) => {
+      setCurrentLocation({
+        lat: position.lat,
+        lng: position.lng,
+        sido: "",
       });
+
+      // hideTimerRef.current = window.setTimeout(() => {
+      //   hide();
+      //   hideTimerRef.current = null;
+      // }, 2000);
+    });
+
+    // .catch((error) => {
+    //   console.log("현재 위치 가져오기 실패:", error);
+    //   if (error.code === 1) {
+    //     show(
+    //       "현재 위치를 가져올 수 없습니다.\n위치 정보 제공을 허용해주세요.",
+    //     );
+    //   } else {
+    //     show("현재 위치를 가져오는 중 오류가 발생했습니다.");
+    //   }
+    // });
   }, [hide, setCurrentLocation, show]);
 
   // useEffect(() => {
